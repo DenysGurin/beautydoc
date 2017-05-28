@@ -1,1 +1,1 @@
-web: gunicorn gifsta.wsgi
+web: gunicorn solnce.wsgi
