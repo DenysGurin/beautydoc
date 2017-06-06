@@ -72,7 +72,7 @@ class Main(View):
         self.context['portfolio_pags'] = Main.make_pagination(self, request, self.context["portfolio"], self.num_photo)
         self.context['feadback_form'] = FeadbackForm()
         self.context['review_form'] = ReviewForm()
-        print(self.context['col_size'])
+        
         return render(request, "main.html", self.context)
 
     def post(self, request):
