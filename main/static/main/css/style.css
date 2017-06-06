@@ -6,18 +6,7 @@ body, h1,h2,h3,h4,h5,h6,p,div {
 p {
 	margin-bottom: 0px;
 }
-.bg {
-    /* The image used */
-    background-image: url("img_girl.jpg");
 
-    /* Full height */
-    height: 50%; 
-
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
 .w3-row-padding {margin-bottom: 12px}
 /* Set the width of the sidebar to 120px */
 .w3-sidebar {width: 120px;background: #fff;overflow:hidden;}
