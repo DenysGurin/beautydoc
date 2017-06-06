@@ -1,0 +1,36 @@
+<ul class="w3-ul w3-card">
+    {% for review in reviews %}  
+      <!-- <img src="/w3images/bandmember.jpg" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px"> -->
+      <li>
+      <p><span class="w3-large w3-margin-right w3-text-theme">{{ review.name }}</span></p>
+      <p>{{ review.review }}</p>
+      </li>
+    {% endfor %}
+</ul>
+{% if reviews.count < reviews_num %}
+    <div class="w3-padding-16 w3-center">
+        <a class="w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2 " id="more" num="{{reviews.count}}"><i class="w3-xxxlarge fa fa-chevron-down" aria-hidden="true"></i></a>
+      <!-- <button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large w3-round-large" id="more" num="{{reviews.count}}"><i class="fa fa-caret-down" aria-hidden="true"></i> Еще</button> -->
+    </div>
+{% endif %}
+<br>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on("click", "#more", function() {
+            var url = "/more_reviews/";
+            var num = $(this).attr("num") + 2;
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'num': num,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#reviews').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+    });
+</script>

@@ -40,12 +40,19 @@ class FeadbackForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ReviewForm, self).__init__(*args, **kwargs)
+        placeholder_dict = {"Name": "Имя",
+                            "Review": "Отзыв",
+                            }
         for field_name in self.fields:
             field = self.fields.get(field_name)  
             if field_name == "review":
-                field.widget = forms.Textarea(attrs={'style': "width:100%;",'class': 'w3-input'})#'style': "width:100%;height:300px;", 
+                field.widget = forms.Textarea(attrs={'style': "width:100%;",
+                                                     'placeholder': placeholder_dict[field.label],
+                                                     'class': 'w3-input'})#'style': "width:100%;height:300px;", 
             else:
-                field.widget = forms.TextInput(attrs={'style': "width:100%;", 'class': 'w3-input'})
+                field.widget = forms.TextInput(attrs={'style': "width:100%;", 
+                                                      'placeholder': placeholder_dict[field.label],
+                                                      'class': 'w3-input'})
     class Meta:
         model = Review
         fields = '__all__'

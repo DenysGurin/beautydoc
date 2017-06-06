@@ -11,7 +11,7 @@ def portfolio_path(instance, filename):
 
 class Portfolio(models.Model):
     photo = models.FileField(upload_to=portfolio_path)
-    name = models.CharField(max_length=30, blank = True)
+    name = models.CharField(max_length=60, blank = True)
     description = models.TextField(blank = True)
 
     def __str__(self):
@@ -19,7 +19,7 @@ class Portfolio(models.Model):
 
 
 class Review(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=60)
     review = models.TextField()
     date = models.DateTimeField(auto_now_add=True, blank = True)
     
@@ -27,7 +27,15 @@ class Review(models.Model):
         return "%s "%str(self.id)
 
 
+class ServiceCategory(models.Model):
+    name = models.CharField(max_length=60, default="", blank = True)
+    description = models.TextField(default="", blank = True)
+
+    def __str__(self):
+        return "%s "%str(self.name)
+
 class Service(models.Model):
+    service_category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=30, default="", blank = True)
     price = models.CharField(max_length=30, default="", blank = True)
     description = models.TextField(default="", blank = True)

@@ -1,0 +1,94 @@
+
+<p class="w3-cell w3-cell-middle" style="width:6%">
+    {% if portfolio_pags.has_previous %}
+        <a class="w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2" prev="{{ portfolio_pags.previous_page_number }}" id="prev_page"><i class="w3-xxxlarge fa fa-chevron-left" aria-hidden="true"></i></a>
+    {% endif %}
+</p>
+<div class="w3-cell w3-row-padding" style="width:88%; height:100%;">
+    <br>
+
+    <script>
+      function show(id) {
+        document.getElementById(id).style.width = "100%";
+      }
+      function hide(id) {
+        document.getElementById(id).style.width = "95%";
+      }
+    </script>
+    {% for photo in portfolio_pags %}
+
+        <div class="w3-third">
+            <div class="w3-container w3-center w3-animate-opacity" style="height: 350px;">
+              <img class="w3-round-large" onclick="onClickPhoto(this)" src="{{photo.photo.url}}" id="{{photo.id}}" onmouseover="show('{{photo.id}}')" onmouseout="hide('{{photo.id}}')" style="width:95%;  cursor:pointer">
+              <div class="w3-container w3-padding-16 w3-center w3-large" >{{ photo.name }}</div><!--  -->
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<p class="w3-cell w3-cell-middle" style="width:6%">
+    {% if portfolio_pags.has_next %}
+        <a class="w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2" next="{{ portfolio_pags.next_page_number }}" id="next_page"><i class="w3-xxxlarge fa fa-chevron-right" aria-hidden="true"></i></a>
+    {% endif %}
+</p>
+<br>
+<div class="w3-content w3-row w3-center w3-padding-32 w3-section w3-theme-d2 w3-opacity-min w3-round-xlarge w3-text-white">
+    <span class="w3-bar-item w3-large">
+        Page {{ portfolio_pags.number }} of {{ portfolio_pags.paginator.num_pages }}.
+    </span>
+</div>    
+
+<div id="modal01" class="w3-modal" style="padding-top: 20px;" onclick="this.style.display='none'">
+  
+  <div class="w3-modal-content w3-animate-zoom w3-center" style="width:600px">
+    <span class="w3-button w3-hover-theme-d2 w3-opacity-max  w3-hover-opacity-off w3-xlarge w3-display-topright">&times;</span>
+    <img id="img01" style="width:100%">
+  </div>
+</div>
+
+<!-- <div id="photo" class="w3-modal">
+    <div class="w3-modal-content w3-card-2 w3-animate-top w3-round-large">
+        <img class=" w3-animate-zoom" src="{{photo.photo.url}}" id="one_photo" style="border-radius: 8px; width:100%;">
+    </div>
+</div> -->
+<script>
+function onClickPhoto(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+}
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on("click", "#prev_page", function() {
+            var url = "/";
+            var page = $(this).attr("prev");
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'page': page,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#works').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+        $(document).on("click", "#next_page", function() {
+            var url = "/";
+            var page = $(this).attr("next");
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'page': page,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                  $('#works').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+    });
+</script>

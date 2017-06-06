@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="main">
+    <div class="w3-row" id="service_categories">
+        {% for category in service_categories %}
+            <div class="w3-conteiner" id="cat" cat_id="{{category.id}}">
+            {% if category.id == category_id %}
+                <div class="w3-col w3-button w3-theme-d2 w3-xlarge w3-hover-theme-d2" style="width: {{ cat_size }}%">
+                    {{ category.name }}
+                </div>
+            {% else %}
+                <div class="w3-col w3-button w3-theme w3-xlarge w3-hover-theme-d2" style="width: {{ cat_size }}%">
+                    {{ category.name }}
+                </div>
+            {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="main">
+    <div class="w3-row" id="services">
+        {% for service in services %}
+            {% if service.id == service_id %}
+                <div class="w3-col w3-button w3-theme-l1 w3-hover-theme-l1" style="width: {{ serv_size }}%">
+                    {{ service.name }}
+                </div>
+            {% else %}
+                <div class="w3-col w3-button w3-white w3-hover-theme-l1" style="width: {{ serv_size }}%">
+                    {{ service.name }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div class="main" style="min-height: 450px">
+    <div class="w3-content">
+        <h2>Bordered List</h2>
+        <p>The w3-border class adds a border around the list:</p>
+        <ul class="w3-ul w3-card" onclick="myFunction('Demo')">
+            {% for category in service_categories %}
+                <li class="w3-hover-theme" >
+                    <div class="w3-display-container w3-large">{{ category.name }}
+                        <span class="w3-display-right w3-medium">Price</span>
+                    </div>
+                    <div id="Demo" class="w3-row w3-hide">
+                      <p>Centered content as well!</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>        
+    </div>
+</div>
+
+
+<script>
+// function myFunction(id) {
+//     var x = document.getElementById(id);
+//     if (x.className.indexOf("w3-show") == -1) {
+//         x.className += " w3-show";
+//     } else { 
+//         x.className = x.className.replace(" w3-show", "");
+//     }
+// }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on("click", "#cat", function() {
+            console.log($(this).attr("cat_id"))
+
+            var url = "/";
+            var category = $(this).attr("cat_id");
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'page': page,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#works').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+    });
+</script>
+{% endblock %}

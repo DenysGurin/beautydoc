@@ -41,26 +41,47 @@
     </div>
   </div>
 </div> -->
+<!-- First Parallax Image with Logo Text -->
 
 <!-- Page Content -->
 <!-- <div class="w3-padding" >
  -->  <!-- Header/Home -->
-  <header class="w3-container w3-padding-32 w3-center" id="home">
-    <h1 class="w3-jumbo"><span class="w3-hide-small"></span> Доктор Куцаченко Светлана Владимировна</h1>
-    <p>ДЕРМАТОЛОГ|КОСМЕТОЛОГ|СПЕЦИАЛИСТ ПО ЛАЗЕРНЫМ МЕТОДИКАМ |ЧЛЕН EADV</p>
-    <!-- Slideshow -->
-    
-  </header>
 
-  <!-- About Section -->
-  <div class="w3-content w3-justify w3-text-grey w3-padding-16" id="about">
-    <h2 class="w3-text-theme">Про меня</h2>
+<div class="main w3-padding-32 w3-center" id="home">
+  
+  <h1 class="w3-jumbo"><span class="w3-hide-small"></span>_dr.svetlanavladimirovna_</h1>
+  <div class="w3-content w3-padding-32">
+    <img class="w3-animate-zoom " src="{% static 'main/img/lips_icon.svg' %}" style="width:50%;">
+  </div>
+  <p>ДЕРМАТОЛОГ|КОСМЕТОЛОГ|СПЕЦИАЛИСТ ПО ЛАЗЕРНЫМ МЕТОДИКАМ |ЧЛЕН EADV</p>
+  <br>
+  <br>
+  
+</div>
+<!-- <div class="main w3-justify w3-display-container " id="about" style="height:400px;background-image: url('{% static 'main/img/background.jpg' %}');opacity: 0.9">
+  <div class="w3-display-middle">
+    <h2 class="w3-red w3-text-black w3-padding-large">Обо мне</h2>
+  </div>
+</div> -->
+
+<!-- About Section -->
+<div class="main w3-justify w3-padding-16" id="about">
+  <div class="w3-content">
+    <h2 class="">Обо мне</h2>
     <hr style="width:200px" class="w3-opacity">
-    <p>Some text about me. Some text about me. I am lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+    <p class="w3-text-black">Some text about me. Some text about me. I am lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
       ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur
       adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     </p>
-    <h3 class="w3-padding-8 w3-text-theme">Специализация</h3>
+    <h3 class="w3-padding-8">Специализация</h3>
+    <p class="w3-wide">Дерматология</p>
+    <!-- <div class="w3-white">
+      <div class="w3-theme" style="height:28px;width:80%"></div>
+    </div> -->
+    <p class="w3-wide">Лечение волос</p>
+    <!-- <div class="w3-white">
+      <div class="w3-theme" style="height:28px;width:80%"></div>
+    </div> -->
     <p class="w3-wide">Инъекционные процедуры</p>
     <!-- <div class="w3-white">
       <div class="w3-theme" style="height:28px;width:100%"></div>
@@ -73,309 +94,249 @@
     <!-- <div class="w3-white">
       <div class="w3-theme" style="height:28px;width:80%"></div>
     </div> -->
-    <p class="w3-wide">Пилинги</p>
-    <!-- <div class="w3-white">
-      <div class="w3-theme" style="height:28px;width:80%"></div>
-    </div> --><br>
+    <br>
 
-    <div class="w3-row w3-center w3-padding-16 w3-section w3-theme-l2 w3-round-xlarge">
-      <div class="w3-quarter w3-section w3-text-white">
-        <span class="w3-xlarge">5+</span><br>
+    <div class="w3-row w3-center w3-padding-4 w3-section w3-theme-d2 w3-opacity-min w3-round-xlarge w3-text-white">
+      <div class="w3-quarter w3-section">
+        <span class="w3-large">5+</span><br>
         Опыт работы
       </div>
-      <div class="w3-quarter w3-section w3-text-white">
-        <span class="w3-xlarge">7+</span><br>
+      <div class="w3-quarter w3-section">
+        <span class="w3-large">7+</span><br>
         Дипломы и сертификаты
       </div>
-      <div class="w3-quarter w3-section w3-text-white">
-        <span class="w3-xlarge">89+</span><br>
+      <div class="w3-quarter w3-section">
+        <span class="w3-large">89+</span><br>
         Happy Clients
       </div>
-      <div class="w3-quarter w3-section w3-text-white">
-        <span class="w3-xlarge">150+</span><br>
+      <div class="w3-quarter w3-section">
+        <span class="w3-large">150+</span><br>
         Meetings
       </div>
     </div>    
+    <br>
+    <br>
+    <br>
+    <br>
   <!-- End About Section -->
   </div>
-
+</div>
   <!-- Portfolio Section -->
-  <div class="w3-padding-8 w3-content" id="photos">
-    <h2 class="w3-text-theme">Работы</h2>
+<div class="main w3-padding-16 w3-small w3-hide-small" id="photos">
+  <div class="w3-content">
+    <h2 class="">Работы</h2>
     <hr style="width:200px" class="w3-opacity">
-
-    <!-- Grid for photos -->
-    <div class="w3-row-padding" style="margin:0 -16px">
-      {% for photo in portfolio_pags %}
-        <div class="w3-third w3-animate-zoom">
-          <img class="w3-opacity-min w3-hover-opacity-off" src="{{photo.photo.url}}" style="width:100%">
-        </div>
-      {% endfor %}
-    <!-- End photo grid -->
-    </div>
-    <!-- Pagination -->
-    <div class="w3-center w3-padding-32">
-      <div class="w3-bar">
-        {% if portfolio_pags.has_previous %}
-            <a href="?page={{ portfolio_pags.previous_page_number }}#photos" class="w3-bar-item w3-button w3-hover-theme"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
-        {% endif %}
-
-        <span class="w3-bar-item">
-            Page {{ portfolio_pags.number }} of {{ portfolio_pags.paginator.num_pages }}.
-        </span>
-
-        {% if portfolio_pags.has_next %}
-            <a href="?page={{ portfolio_pags.next_page_number }}#photos" class="w3-bar-item w3-button w3-hover-theme"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
-        {% endif %}
-        
-      </div>
-    </div>
-  <!-- End Portfolio Section -->
   </div>
-
-  <!-- Price Section -->
-  <div class="w3-padding-8 w3-content" id="price">
-    <!-- Grid for pricing tables -->
-    <h2 class="w3-text-theme">Цены</h2>
-    <hr style="width:200px" class="w3-opacity">
-    <div class="w3-row-padding " style="margin:0 -16px">
-
-      <div class="w3-third w3-margin-bottom">
-        <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-theme-l1 w3-xlarge w3-padding-32 w3-round-xlarge">Увеличение губ</li>
-          <li class="w3-padding-16">Web Design</li>
-          <li class="w3-padding-16">Photography</li>
-          <li class="w3-padding-16">5GB Storage</li>
-          <li class="w3-padding-16">Mail Support</li>
-          <li class="w3-padding-16">
-            <h2>$ 10</h2>
-            <span class="w3-opacity">per month</span>
-          </li>
-          <li class="w3-theme-l2 w3-padding-24 w3-round-xlarge">
-            <button class="w3-button w3-white w3-padding-large w3-hover-red w3-round-large">Sign Up</button>
-          </li>
-        </ul>
-      </div>
-
-      <div class="w3-third w3-margin-bottom">
-          <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-            <li class="w3-theme-l1 w3-xlarge w3-padding-32 w3-round-xlarge">Контурная пластика</li>
-            <li class="w3-padding-16">Web Design</li>
-            <li class="w3-padding-16">Photography</li>
-            <li class="w3-padding-16">50GB Storage</li>
-            <li class="w3-padding-16">Endless Support</li>
-            <li class="w3-padding-16">
-              <h2>$ 25</h2>
-              <span class="w3-opacity">per month</span>
-            </li>
-            <li class="w3-theme-l2 w3-padding-24 w3-round-xlarge">
-              <button class="w3-button w3-white w3-padding-large w3-hover-red w3-round-large">Sign Up</button>
-            </li>
-          </ul>
-        </div>
-
-      <div class="w3-third w3-margin-bottom">
-        <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-theme-l1 w3-xlarge w3-padding-32 w3-round-xlarge">Биоревитализация</li>
-          <li class="w3-padding-16">Web Design</li>
-          <li class="w3-padding-16">Photography</li>
-          <li class="w3-padding-16">5GB Storage</li>
-          <li class="w3-padding-16">Mail Support</li>
-          <li class="w3-padding-16">
-            <h2>$ 10</h2>
-            <span class="w3-opacity">per month</span>
-          </li>
-          <li class="w3-theme-l2 w3-padding-24 w3-round-xlarge">
-            <button class="w3-button w3-white w3-padding-large w3-hover-red w3-round-large">Sign Up</button>
-          </li>
-        </ul>
-      </div>
-
-      <div class="w3-third w3-margin-bottom">
-        <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-          <li class="w3-theme-l1 w3-xlarge w3-padding-32 w3-round-xlarge">Лазерная эпиляция</li>
-          <li class="w3-padding-16">Web Design</li>
-          <li class="w3-padding-16">Photography</li>
-          <li class="w3-padding-16">5GB Storage</li>
-          <li class="w3-padding-16">Mail Support</li>
-          <li class="w3-padding-16">
-            <h2>$ 10</h2>
-            <span class="w3-opacity">per month</span>
-          </li>
-          <li class="w3-theme-l2 w3-padding-24 w3-round-xlarge">
-            <button class="w3-button w3-white w3-padding-large w3-hover-red w3-round-large">Sign Up</button>
-          </li>
-        </ul>
-      </div>
-      <!-- End Grid/Pricing tables -->
-      </div>
-  <!-- End Price Section -->
+  
+  <!-- Grid for photos -->
+  <div class="w3-hide-small w3-hide-medium" id="works">
+    {% include 'portfolio.html' %}
+  <!-- End photo grid -->
   </div>
+  
+<!-- End Portfolio Section -->
+</div>
 
-  <!-- Contact Section -->
-  <div class="w3-padding-8 w3-content w3-text-grey" id="contact">
-    <h2 class="w3-text-theme">Запись</h2>  
-    <hr style="width:200px" class="w3-opacity">
+
+
+<!-- Price Section -->
+<div class="main w3-padding-16" id="price">
+  
+  <div class="w3-content">
+  <h2>Цены</h2>
+  <hr style="width:200px" class="w3-opacity">
+  </div>
+  <!-- Grid for pricing tables -->
+  <div class="w3-content w3-center w3-row-padding">
+
+    {% include 'services.html' %}
+
     
-    <form class="w3-border" method="post">{% csrf_token %}
-      <!-- {{form}} -->
-      <div class="w3-row-padding">
-        <div class="w3-col w3-padding" style="width:100%">
-          <h3 class="w3-padding-8 w3-text-theme">Оставте Ваши контакты, чтобы я могла связаться с вами:</h3>
-        </div>
+    
+    <!-- End Grid/Pricing tables -->
+  </div>
+<!-- End Price Section -->
+</div>
+
+<!-- Contact Section -->
+<div class="main w3-padding-16" id="contact">
+  <div class="w3-content">
+    <h2>Запись</h2>  
+    <hr style="width:200px" class="w3-opacity">
+  </div>
+  <form class="w3-content w3-card" method="post">{% csrf_token %}
+    <div class="w3-row-padding">
+      <div class="w3-col w3-padding" style="width:100%">
+        <h3 class="w3-padding-8">Оставте Ваши контакты, чтобы я могла связаться с вами:</h3>
       </div>
-      <div class="w3-row-padding">
-        <div class="w3-col" style="width:5%">
+    </div>
+    <div class="w3-container">
+      <div class="w3-row">
+        <div class="w3-content w3-half">
+        <div class="w3-col" style="width:50px">
           <i class="w3-xlarge fa fa-user w3-text-red w3-padding"></i>
         </div>
-        <div class="w3-col" style="width:45%">
+        <div class="w3-rest">
           {{ feadback_form.first }}
         </div>
-        <div class="w3-col" style="width:5%">
+        </div>
+        <div class="w3-content w3-half">
+        <div class="w3-col" style="width:50px">
           <i class="w3-xlarge fa fa-user w3-text-red w3-padding"></i>
         </div>
-        <div class="w3-col" style="width:45%">
+        <div class="w3-rest">
           {{ feadback_form.last }}
+        </div>
         </div>
       </div>
 
-      <div class="w3-row-padding">
-        <div class="w3-col" style="width:5%">
+      <div class="w3-row">
+        <div class="w3-content w3-half">
+        <div class="w3-col" style="width:50px">
           <i class="w3-xlarge fa fa-phone w3-text-red w3-padding"></i>
         </div>
-        <div class="w3-col" style="width:45%">
+        <div class="w3-rest">
           {{ feadback_form.tel }}
         </div>
-        <div class="w3-col" style="width:5%">
+        </div>
+        <div class="w3-content w3-half">
+        <div class="w3-col" style="width:50px">
           <i class="w3-xlarge fa fa-envelope-o w3-text-red w3-padding"></i>
         </div>
-        <div class="w3-col" style="width:45%">
+        <div class="w3-rest">
           {{ feadback_form.email }}
         </div>
-      </div>
-      <div class="w3-row-padding">
-        <div class="w3-col" style="width:5%">
-          <i class="w3-xlarge fa fa-pencil w3-text-red w3-padding"></i>
-        </div>
-        <div class="w3-col" style="width:95%">
-          {{ feadback_form.wish }}
         </div>
       </div>
-      <div class="w3-row-padding">
-        <div class="w3-col w3-padding-32" style="width:100%">
+
+      <div class="w3-row">
+        <div class="w3-content">
+          <div class="w3-col" style="width:50px">
+            <i class="w3-xlarge fa fa-pencil w3-text-red w3-padding"></i>
+          </div>
+          <div class="w3-rest" >
+            {{ feadback_form.wish }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w3-row">
+      <div class="w3-content">
+        <div class="w3-col w3-padding-16" style="width:100%; margin-left: 30px;">
           <button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large w3-round-large" type="submit" name="submit" value="feadback">
           <i class="fa fa-paper-plane"></i> Обратная связь
           </button>
         </div>
       </div>
-      <!-- <p><input class="w3-input w3-padding-16" type="text" placeholder="Имя" name="first"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Фамилия" name="last"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Мобильный" name="tel"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Пожелания" name="wish"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" name="email"></p> -->
-      <!-- <p>
-        <button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large" type="submit">
-          <i class="fa fa-paper-plane"></i> Обратная связь
-        </button>
-      </p> -->
-    </form>
-  <!-- End Contact Section -->
-  </div>
+    </div>
+    <!-- <p><input class="w3-input w3-padding-16" type="text" placeholder="Имя" name="first"></p>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Фамилия" name="last"></p>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Мобильный" name="tel"></p>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Пожелания" name="wish"></p>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" name="email"></p> -->
+    <!-- <p>
+      <button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large" type="submit">
+        <i class="fa fa-paper-plane"></i> Обратная связь
+      </button>
+    </p> -->
+  </form>
+<!-- End Contact Section -->
+</div>
 
-  <!-- Location Section -->
-  <div class="w3-padding-32 w3-content w3-text-grey" id="location">
-    <h2 class="w3-text-theme">Контакты</h2>
-    <hr style="width:200px" class="w3-opacity">
-
-    <div class="w3-section">
-      <p><i class="fa fa-map-marker fa-fw w3-text-red w3-xxlarge w3-margin-right"></i><a href="https://www.google.com.ua/maps/place/%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F+%D0%92%D0%B5%D0%BB%D0%B8%D0%BA%D0%B0+%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%D0%BA%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B0,+89,+%D0%9A%D0%B8%D1%97%D0%B2,+02000/@50.4247109,30.5163606,17z/data=!3m1!4b1!4m5!3m4!1s0x40d4cf3c4bfb06a5:0x684daf655cda815c!8m2!3d50.4247109!4d30.5185493" target="_blank"> Киев, Большая Васильковская 89, Украина</a></p>
-      <p><i class="fa fa-phone fa-fw w3-text-red w3-xxlarge w3-margin-right"></i> Мобильный: +38 093 669 35 65</p>
-      <p><i class="fa fa-envelope fa-fw w3-text-red w3-xxlarge w3-margin-right"> </i> Email: svetlanakutsachenko@gmail.com</p>
-      <!-- Google Map -->
-      <div id="googleMap" style="width:100%;height:400px;margin:36px 0;"></div>
-    </div><br>
-  <!-- End Location Section -->
-  </div>
-  <!-- Reviews Section-->
-  <div class="w3-padding-24 w3-content w3-text-grey" id="review">
-    <h2 class="w3-padding-12 w3-text-theme">Отзывы</h2>
+<!-- Location Section -->
+<div class="main w3-padding-16" id="location">
+  <div class="w3-content">
+    <h2 class="">Контакты</h2>
     <hr style="width:200px" class="w3-opacity">
     
-    {% for review in reviews %}  
-      <!-- <img src="/w3images/bandmember.jpg" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px"> -->
-      <p><span class="w3-large w3-margin-right w3-text-theme">{{ review.name }}</span></p>
-      <p>{{ review.review }}</p>
-    {% endfor %}
-
-    <div class="w3-padding-32">
+    <div class="w3-row-padding">
+      <div class="w3-third"><i class="fa fa-map-marker fa-fw w3-text-red w3-xxlarge w3-margin-right"></i><a href="https://www.google.com.ua/maps/place/вулиця+Велика+Васильківська,+89,+Київ,+02000/" target="_blank"> Киев, Большая Васильковская 89, Украина</a></div>
+      <div class="w3-third"><i class="fa fa-phone fa-fw w3-text-red w3-xxlarge w3-margin-right"></i> Мобильный: +38 093 669 35 65</div>
+      <div class="w3-third"><i class="fa fa-envelope fa-fw w3-text-red w3-xxlarge w3-margin-right"> </i> Email: svetlanakutsachenko@gmail.com</div>
+      
+    </div>
+    <!-- Google Map -->
+    <div id="googleMap" style="width:100%;height:400px;margin:36px 0;"></div>
+    <br>
+  </div>
+<!-- End Location Section -->
+</div>
+<!-- Reviews Section-->
+<div class="main w3-padding-16" id="review">
+  <div class="w3-content">
+    <h2 class="">Отзывы</h2>
+    <hr style="width:200px" class="w3-opacity">
+    <div class="w3-content" id="reviews">
+    {% include 'reviews.html' %}
+    </div>
+    <div class="w3-padding-8">
       <button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large w3-round-large" onclick="document.getElementById('id01').style.display='block'" style="font-weight:900;">Оставить отзыв</button>
     </div>
+  </div>
+</div>
+  <!-- Modal -->
+  <div id="id01" class="w3-modal">
+    <div class="w3-modal-content w3-card-2 w3-animate-top">
+      <div class="w3-display-container w3-padding-16 w3-xlarge w3-theme"><div class="w3-container">Напишите свой отзыв</div>
+        <span onclick="document.getElementById('id01').style.display='none'"
+        class="w3-button w3-display-right w3-large w3-hover-red">×</span>
+      </div>
+      <form class="w3-content w3-card" method="post">{% csrf_token %}
+    <!-- <div class="w3-row-padding">
+      <div class="w3-col w3-padding" style="width:100%">
+        <h3 class="w3-padding-8">Оставте Ваш отзыв, чтобы </h3>
+      </div>
+    </div> -->
+    <br>
+    <div class="w3-container">
+      <div class="w3-row">
+        <div class="w3-content">
+          <div class="w3-col" style="width:50px">
+            <i class="w3-xlarge fa fa-user w3-text-red w3-padding"></i>
+          </div>
+          <div class="w3-rest" placeholder="Ваше имя">
+            {{ review_form.name }}
+          </div>
+        </div>
+      </div>
 
-    <!-- Modal -->
-    <div id="id01" class="w3-modal">
-      <div class="w3-modal-content w3-card-2 w3-animate-top w3-round-large">
-        <header class="w3-container w3-theme w3-round-large"> 
-          <span onclick="document.getElementById('id01').style.display='none'"
-          class="w3-button w3-display-topright w3-xlarge w3-hover-red w3-round-large">×</span>
-          <h4>Напишите свой отзыв <i class="fa fa-smile-o w3-xxlarge"></i></h4>
-        </header>
-        <form class="w3-container" method="post">{% csrf_token %}
-            <p><i class="w3-xlarge fa fa-user w3-text-red w3-padding"></i><label ><b>Ваше имя</b></label><p>
-            <p>{{ review_form.name }} </p>
-            <p><i class="w3-xlarge fa fa-font w3-text-red w3-padding"></i><label ><b>Ваш отзыв</b></label><p>
-            <p>{{ review_form.review }}</p>
-            <p><button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large w3-round-large" type="submit" name="submit" value="review">
-              <i class="fa fa-comments"></i> Отзыв
-              </button></p>
-          <!-- <div class="w3-row-padding">
-            <div class="w3-col" style="width:5%">
-              <p><i class="w3-xlarge fa fa-user w3-padding"></i>
-            </div>
-            <div class="w3-col w3-padding" style="width:95%">
-              {{ review_form.name }}
-            </div>
+      <div class="w3-row">
+        <div class="w3-content">
+          <div class="w3-col" style="width:50px">
+            <i class="w3-xlarge fa fa-pencil w3-text-red w3-padding"></i>
           </div>
-          <div class="w3-row-padding">
-            <div class="w3-col" style="width:5%">
-              <i class="w3-xlarge fa fa-font w3-padding"></i>
-            </div>
-            <div class="w3-col w3-padding" style="width:95%">
-              {{ review_form.review }}
-            </div>
+          <div class="w3-rest" placeholder="Отзыв">
+            {{ review_form.review }}
           </div>
-          <div class="w3-row-padding">
-            <div class="w3-col" style="width:100%">
-              <button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large" type="submit" name="submit" value="review">
-              <i class="fa fa-comments"></i> Отзыв
-              </button>
-            </div>
-          </div> -->
-        </form>
+        </div>
       </div>
     </div>
+
+    <div class="w3-row">
+      <div class="w3-content">
+        <div class="w3-col w3-padding-16" style="width:100%; margin-left: 30px;">
+          <button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large w3-round-large" type="submit" name="submit" value="review">
+          <i class="fa fa-paper-plane"></i> Отзыв
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- <p><input class="w3-input w3-padding-16" type="text" placeholder="Имя" name="first"></p>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Фамилия" name="last"></p>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Мобильный" name="tel"></p>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Пожелания" name="wish"></p>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" name="email"></p> -->
+    <!-- <p>
+      <button class="w3-button w3-theme w3-hover-theme-d2 w3-padding-large" type="submit">
+        <i class="fa fa-paper-plane"></i> Обратная связь
+      </button>
+    </p> -->
+  </form>
+    </div>
   </div>
+</div>
 <!-- </div> -->
-<script>
-var slideIndex = 1;
-showDivs(slideIndex);
 
-function plusDivs(n) {
-  showDivs(slideIndex += n);
-}
-
-function showDivs(n) {
-  var i;
-  var x = document.getElementsByClassName("mySlides");
-  if (n > x.length) {slideIndex = 1}    
-  if (n < 1) {slideIndex = x.length}
-  for (i = 0; i < x.length; i++) {
-     x[i].style.display = "none";  
-  }
-  x[slideIndex-1].style.display = "block";  
-}
-
-
-</script>
 
 
 <!-- Add Google Maps -->
@@ -396,10 +357,17 @@ function myMap()
   marker.setMap(map);
 }
 </script>
+
+
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEXGt4lsFEHXIDdMXe60C-SbNW3jpQmEI&callback=myMap"></script>
 <!--
 To use this code on your website, get a free API key from Google.
 Read more at: https://www.w3schools.com/graphics/google_maps_basic.asp
 -->
+
+
+
+
 {% endblock %}
 
