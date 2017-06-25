@@ -1,0 +1,12 @@
+{% for feadback in feadback_list %}
+    <li onclick='goTo("{% url 'dgcrm:detailed_feadback' feadback.id %}")' style="cursor:pointer">
+        <a>{{ feadback.client.first }} {{ feadback.client.last }}</a>
+        {% if feadback.has_event %}
+            <i class="fa fa-check w3-right w3-text-red" aria-hidden="true"></i>
+        {% endif %}
+        <br>
+        <a>{{ feadback.tel }}</a>
+        <br>
+        <a>{{ feadback.wish }}</a>
+    </li>
+{% endfor %}

@@ -3,16 +3,16 @@
 {% block content %}
 {% load static %}
 
-<div class="main">
-    <div class="w3-row" id="service_categories">
+<div class="main" >
+    <div class="w3-row" id="service_categories_block" category_id="{{ category_id }}">
         {% for category in service_categories %}
-            <div class="w3-conteiner" id="cat" cat_id="{{category.id}}">
+            <div class="w3-conteiner">
             {% if category.id == category_id %}
-                <div class="w3-col w3-button w3-theme-d2 w3-xlarge w3-hover-theme-d2" style="width: {{ cat_size }}%">
+                <div class="w3-col w3-button w3-theme-d2 w3-xlarge w3-hover-theme-d2 cat_btn" id="current_cat" onclick='changeCurrent("cat_btn", "{{category.id}}", "cat_id", "w3-theme", "w3-theme-d2")' cat_id="{{category.id}}" style="width: {{ cat_size }}%">
                     {{ category.name }}
                 </div>
             {% else %}
-                <div class="w3-col w3-button w3-theme w3-xlarge w3-hover-theme-d2" style="width: {{ cat_size }}%">
+                <div class="w3-col w3-button w3-theme w3-xlarge w3-hover-theme-d2 cat_btn" onclick='changeCurrent("cat_btn", "{{category.id}}", "cat_id", "w3-theme", "w3-theme-d2")' cat_id="{{category.id}}" style="width: {{ cat_size }}%">
                     {{ category.name }}
                 </div>
             {% endif %}
@@ -21,68 +21,110 @@
     </div>
 </div>
 
-<div class="main">
-    <div class="w3-row" id="services">
-        {% for service in services %}
-            {% if service.id == service_id %}
-                <div class="w3-col w3-button w3-theme-l1 w3-hover-theme-l1" style="width: {{ serv_size }}%">
-                    {{ service.name }}
-                </div>
-            {% else %}
-                <div class="w3-col w3-button w3-white w3-hover-theme-l1" style="width: {{ serv_size }}%">
-                    {{ service.name }}
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+<div class="main" >
+    {% include 'services_block.html' %}
 </div>
 
 <div class="main" style="min-height: 450px">
-    <div class="w3-content">
-        <h2>Bordered List</h2>
-        <p>The w3-border class adds a border around the list:</p>
-        <ul class="w3-ul w3-card" onclick="myFunction('Demo')">
-            {% for category in service_categories %}
-                <li class="w3-hover-theme" >
-                    <div class="w3-display-container w3-large">{{ category.name }}
-                        <span class="w3-display-right w3-medium">Price</span>
-                    </div>
-                    <div id="Demo" class="w3-row w3-hide">
-                      <p>Centered content as well!</p>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>        
-    </div>
+    {% include 'detailed_services_block.html' %}
 </div>
 
 
 <script>
-// function myFunction(id) {
-//     var x = document.getElementById(id);
-//     if (x.className.indexOf("w3-show") == -1) {
-//         x.className += " w3-show";
-//     } else { 
-//         x.className = x.className.replace(" w3-show", "");
-//     }
-// }
+function changeCurrent(class_name, id, attr_name, color1, color2) {
+    var cat_list = document.getElementsByClassName(class_name);
+    // проверка текущего елемента????
+    var id = id;
+    var attr_name = attr_name;
+    var color1 = color1;
+    var color2 = color2;
+    var current_cat = document.getElementById("service_categories_block").getAttribute("category_id");
+    console.log(id, current_cat)
+    if (current_cat != id) {
+        for (i = 0; i < cat_list.length; i++) {
+            // console.log(cat_list[i].getAttribute("cat_id"))
+            if (cat_list[i].getAttribute(attr_name) == id) {
+                cat_list[i].className = cat_list[i].className.replace(color1, color2);
+            } else {
+                cat_list[i].className = cat_list[i].className.replace(color2, color1);
+            }
+        }
+        if (class_name == "cat_btn") {
+            document.getElementById("service_categories_block").setAttribute("category_id", id)    
+        }
+    }
+    
+    // serv_list[0].className = serv_list[0].className.replace("w3-theme-d2","w3-theme-l1")
+}
+
+function myFunction(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $(document).on("click", "#cat", function() {
-            console.log($(this).attr("cat_id"))
+        $(document).on("click", ".cat_btn", function() {
+            // console.log($(this).attr("cat_id"))
 
-            var url = "/";
-            var category = $(this).attr("cat_id");
+            var url = "/price/";
+            var cat_id = $(this).attr("cat_id");
+
+            // $("#cat_btn").attr("class", "w3-col w3-button w3-theme w3-xlarge w3-hover-theme-d2");
+            // $(this).attr("class", "w3-col w3-button w3-theme-d2 w3-xlarge w3-hover-theme-d2");
+            // 
             $.ajax({
                 type: 'POST',
                 async: true,
                 url: url,
-                data: {'page': page,
+                data: {'cat_id': cat_id,
                        'csrfmiddlewaretoken': '{{csrf_token}}'
                         },
                 success: function(data) {
-                    $('#works').html(data);
+                    $('#services_block').html(data);
+                },
+                datatype: 'json',
+                async: false,
+            });
+
+            var serv_id = $("#current_serv").attr("service_id");
+            // console.log(serv_id)
+
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'serv_id': serv_id,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#detailed_services_block').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+        $(document).on("click", ".serv_btn", function() {
+            console.log($(this).attr("serv_id"))
+
+            var url = "/price/";
+            var serv_id = $(this).attr("serv_id");
+
+            // $("#cat_btn").attr("class", "w3-col w3-button w3-theme w3-xlarge w3-hover-theme-d2");
+            // $(this).attr("class", "w3-col w3-button w3-theme-d2 w3-xlarge w3-hover-theme-d2");
+            // 
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'serv_id': serv_id,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#detailed_services_block').html(data);
                 },
                 datatype: 'json',
             });

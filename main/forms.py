@@ -1,6 +1,6 @@
 from django import forms
-from .models import Feadback, Review
-
+from .models import Review
+from dgcrm.models import Feadback
 
 # class FeadbackForm(forms.Form):
 #     first = forms.CharField(max_length=30, label="First")
@@ -34,7 +34,8 @@ class FeadbackForm(forms.ModelForm):
                 
     class Meta:
         model = Feadback
-        fields = ['first', 'last', 'tel', 'wish', 'email']
+        exclude = ["date", "has_event", "client"]
+        # fields = ['first', 'last', 'tel', 'wish', 'email']
 
 
 class ReviewForm(forms.ModelForm):

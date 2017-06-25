@@ -1,0 +1,71 @@
+{% extends "base_crm.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="w3-main w3-content w3-card-4 w3-animate-opacity" id="calendar" style="max-width:80%">
+    <div class="w3-row ">
+        {% for day in week_periods %}
+            <div class="w3-col " style="width:14.28%">
+                <ul class="w3-ul">
+                    <li class="w3-red">
+                        <a>{{ day }}</a>
+                        <br>
+                        <a>{{ day.day_of_week }}</a>
+                    </li>
+                    {% for period in day %}
+                        <!-- <a>{{ period }}</a> -->
+                        {% if period.event %}
+
+                            {% if period.event.successful %}
+
+                                {% if period.start_event %}
+                                    <li id="calendar_period_" class="w3-green w3-small w3-padding-small"> 
+                                     <!-- border-bottom: 0px;  -->
+                                        <a>{{ period.render }} {{ period.event.detailed_service.service.name }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="w3-green w3-small w3-padding-small">
+                                    <!-- style="border-top: 0px; border-bottom: 0px; " -->
+                                        <a>{{ period.render }}</a>
+                                    </li>
+                                {% endif %} 
+
+                            {% else %}
+
+                                {% if period.start_event %}
+                                    <li id="calendar_period_" class="w3-red w3-small w3-padding-small"> 
+                                     <!-- border-bottom: 0px;  -->
+                                        <a>{{ period.render }} {{ period.event.detailed_service.service.name }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="w3-red w3-small w3-padding-small">
+                                    <!-- style="border-top: 0px; border-bottom: 0px; " -->
+                                        <a>{{ period.render }}</a>
+                                    </li>
+                                {% endif %} 
+
+                            {% endif %} 
+
+                        {% elif period.in_past %} 
+                            <li class="w3-light-grey w3-small w3-padding-small">
+                                <a>{{ period.render }}</a>
+                            </li>
+                        {% else %}
+                            <li class="w3-small w3-padding-small" onclick='goTo("{% url 'dgcrm:transfer_event' event_id %}?datetime={{ period.period_datetime }}")' style="cursor:pointer">
+                                <a>{{ period.render }}</a>
+                                <i class="fa fa-exchange w3-right w3-large w3-text-red" id="{{ period.period_datetime }}" aria-hidden="true" style="visibility: hidden"></i>
+                            </li>
+                        {% endif %} 
+
+                    {% endfor %}
+                
+                </ul>
+            </div> 
+        {% endfor %}
+     
+    </div>
+    
+</div>
+
+{% endblock %}

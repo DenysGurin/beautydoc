@@ -1,0 +1,34 @@
+{% extends "base_crm.html" %}
+
+{% block content %}
+{% load static %}
+
+{% if feadback_list and periods and client_list %}
+<div class="w3-main w3-padding-24 w3-content" style="max-width:90%">
+    <div class="w3-row-padding">
+        <div class="w3-col s3 w3-animate-left">
+            <div class="w3-card-4">
+                {% include 'feadback.html' %}
+            </div>
+        </div>
+    
+        <div class="w3-col s6 w3-animate-opacity">
+            <div class="w3-card-4">
+                {% include 'event.html' %}
+            </div>      
+        </div>
+
+        <div class="w3-col s3 w3-animate-right">
+            <div class="w3-card-4">
+                {% include 'client.html' %}
+            </div>
+        </div>
+    </div>  
+</div>
+<br><br>
+{% endif %}
+
+{% include 'calendar.html' %}
+
+{% endblock %}
+

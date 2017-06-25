@@ -1,0 +1,14 @@
+{% extends "crm.html" %}
+
+{% block content %}
+{% load static %}
+{% load i18n %}
+
+
+<form method="post">{% csrf_token %}
+  {{ feadback_form }}
+  {{ event_form }}
+  <input type="submit" name="submit" value="create_event">
+</form>
+
+{% endblock %}

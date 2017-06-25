@@ -1,0 +1,28 @@
+<!-- {% for event in event_list %}
+    <li>
+        <a href="{% url 'dgcrm:detailed_event' event.id %}">{{ event }}</a>
+    </li>
+{% endfor %} -->
+<li>
+    <a>{{ periods.day_of_week }}, {{ periods }}</a>
+</li>
+{% for period in periods %}
+    {% if period.event %}
+     <li class="w3-red" onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer">
+        <a>{{ period.render }}</a>
+        <a class="w3-right">{{ period.event.feadback.client }}</a>
+        <br>
+        <a>{{ period.event.detailed_service }}</a>
+        <a class="w3-right">{{ period.event.price }} грн</a>
+        <a></a>
+
+    </li>
+    {% else %}
+    <li onclick='goTo("{% url 'dgcrm:create_event' %}?datetime={{ period.period_datetime }}")' onmouseover="document.getElementById('{{ period.period_datetime }}').style.visibility = 'visible'" onmouseout="document.getElementById('{{ period.period_datetime }}').style.visibility = 'hidden'" style="cursor:pointer">
+        <a>{{ period.render }}</a>
+        <i class="fa fa-plus-circle w3-right w3-xlarge w3-text-red" id="{{ period.period_datetime }}" aria-hidden="true" style="visibility: hidden"></i>
+    </li>
+    {% endif %}
+    
+{% endfor %}
+

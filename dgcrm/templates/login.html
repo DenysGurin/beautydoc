@@ -1,0 +1,12 @@
+{% extends "base_crm.html" %}
+
+{% block content %}
+{% load static %}
+
+<form method="post">{% csrf_token %}
+  {{ login_form }}
+  <input type="submit" name="submit" value="login">
+</form>
+
+{% endblock %}
+

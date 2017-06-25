@@ -1,0 +1,95 @@
+<div class="w3-content">
+    {% if feadback_list %}
+        <ul class="w3-ul">
+            <li class="w3-red w3-large">Очередь запросов</li> 
+            <div class="w3-bar" id="feadback_bar">
+                <div class="w3-bar-item w3-hover-red" id="all">Все</div>
+                <div class="w3-bar-item w3-hover-red" id="to_work">В работу</div>
+                <div class="w3-bar-item w3-hover-red" id="processed">Обработанные</div>
+            </div>
+            <li>
+                <form class="w3-cell-row  w3-border w3-round-large" id="search_form" method="post">{% csrf_token %}
+                    <a class="w3-cell" style="padding-left:10px">{{serch_feadback_form.search}}</a>
+                    <a class="w3-cell-midlle w3-conteiner" style="cursor:pointer"><i id="search_feadback_icon" class="fa fa-search w3-text-red" aria-hidden="true"></i></a>
+                </form>
+            </li>
+        </ul>
+        <ul class="w3-ul" id="feadback_list" style="height: 60vh; overflow: auto;">
+            {% include 'feadback_list_ajax.html' %}
+        </ul>
+        
+    {% endif %}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#search_form").on("click", "#search_feadback_icon", function() {
+            var url = "/crm/";
+            var search_feadback = $('#search_feadback').val();
+            console.log(search_feadback);
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'search_feadback': search_feadback,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#feadback_list').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+        $("#feadback_bar").on("click", "#all", function() {
+            var url = "/crm/feadback/feadback_bar/";
+            var filter_type = "all";
+            console.log(search_feadback);
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'filter_type': filter_type,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#feadback_list').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+        $("#feadback_bar").on("click", "#to_work", function() {
+            var url = "/crm/feadback/feadback_bar/";
+            var filter_type = "to_work";
+            console.log(search_feadback);
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'filter_type': filter_type,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#feadback_list').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+        $("#feadback_bar").on("click", "#processed", function() {
+            var url = "/crm/feadback/feadback_bar/";
+            var filter_type = "processed";
+            console.log(search_feadback);
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'filter_type': filter_type,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#feadback_list').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+    });
+</script>

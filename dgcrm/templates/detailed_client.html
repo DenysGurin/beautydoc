@@ -1,0 +1,33 @@
+{% extends "crm.html" %}
+
+{% block content %}
+{% load static %}
+{% load i18n %}
+
+{{ client }}
+<br>
+<br>
+<div>История процедур</div>
+{% if detailed_service_list %}
+    {% for detailed_service in detailed_service_list %}
+      <a href="{% url 'dgcrm:detailed_client' client.id %}">{{ detailed_service }}</a>
+      <br>
+    {% endfor %}
+{% endif %}
+<br>
+<br>
+<div>История результатов</div>
+{% if result_list %}
+    {% for result in result_list %}
+      <a href="{% url 'dgcrm:detailed_client' client.id %}">{{ result }}</a>
+      <br>
+    {% endfor %}
+{% endif %}
+<br>
+<br>
+<!-- <form method="post">{% csrf_token %}
+  {{ event_form }}
+  <input type="submit" name="submit" value="event">
+</form> -->
+
+{% endblock %}

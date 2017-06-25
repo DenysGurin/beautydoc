@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<title>Светлана Владимировна - Доктор дермато-косметолог</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="{% static 'main/img/lips_icon.png' %}" type="image/x-icon">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Jura|Open+Sans+Condensed:300" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/w3.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/w3-colors-food.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/w3-theme-red.css' %}">
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/style.css' %}">
+
+<script src="{% static 'main/libs/jquery-1.11.2.min.js' %}"></script>
+
+
+<!-- <link rel="stylesheet" type="text/css" href="/jquery."> -->
+<body>
+<!-- First Parallax Image with Logo Text -->
+<div class="w3-top">
+  <div class="w3-bar w3-red w3-large w3-animate-top">
+  	{% if main_page %}
+    	<a href="#" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
+    {% else %}
+    	<a href="/crm/" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
+    {% endif %}
+    <a href="#calendar" class="w3-bar-item w3-button">КАЛЕНДАРЬ</a>
+    <a href="#" class="w3-bar-item w3-button">Link 2</a>
+    <a href="/crm/logout/" class="w3-bar-item w3-button w3-right">ВЫЙТИ</a>
+  </div>
+</div>
+
+<br><br>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
+
+<script type="text/javascript">
+function goTo(url) {
+    location.href = url
+}
+</script>
