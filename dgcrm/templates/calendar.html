@@ -1,82 +1,98 @@
-<div class="w3-main w3-content w3-card-4 w3-animate-opacity" id="calendar" style="max-width:80%">
-    <div class="w3-row ">
-        {% for day in week_periods %}
-            <div class="w3-col " style="width:14.28%">
-                <ul class="w3-ul">
-                    <li class="w3-red">
-                        <a>{{ day }}</a>
-                        <br>
-                        <a>{{ day.day_of_week }}</a>
-                    </li>
-                    {% for period in day %}
-                        <!-- <a>{{ period }}</a> -->
-                        {% if period.event %}
+<div class="w3-conteiner" id="calendar">
+    <br><br><br>
+    <div class="w3-cell-row">
+        <div class="w3-cell w3-display-container" style="width:10%">
+        
+            <a class="w3-display-middle w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2 w3-padding-32" prev="{{ portfolio_pags.previous_page_number }}" id="prev_page"><i class="w3-xxxlarge fa fa-chevron-left" aria-hidden="true"></i></a>
+        
+        </div>
+        <div class="w3-cell w3-content w3-card-4 w3-animate-opacity" style="max-width:80%">
 
-                            {% if period.event.successful %}
+            <div class="w3-row ">
+                {% for day in week_periods %}
+                    <div class="w3-col " style="width:14.28%">
+                        <ul class="w3-ul">
+                            <li class="w3-red">
+                                <a>{{ day }}</a>
+                                <br>
+                                <a>{{ day.day_of_week }}</a>
+                            </li>
+                            {% for period in day %}
+                                <!-- <a>{{ period }}</a> -->
+                                {% if period.event %}
 
-                                {% if period.start_event %}
-                                    <li id="calendar_period_" class="w3-green w3-small w3-padding-small" onmouseover='showElementById("pop_up_{{ period.event.id }}")' onmouseout='hideElementById("pop_up_{{ period.event.id }}")' onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer;"> 
-                                     <!-- border-bottom: 0px;  -->
-                                        <a>{{ period.render }} {{ period.event.detailed_service.service.name }}</a>
+                                    {% if period.event.successful %}
+
+                                        {% if period.start_event %}
+                                            <li id="calendar_period_" class="w3-green w3-small w3-padding-small" onmouseover='showElementById("pop_up_{{ period.event.id }}")' onmouseout='hideElementById("pop_up_{{ period.event.id }}")' onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer;"> 
+                                             <!-- border-bottom: 0px;  -->
+                                                <a>{{ period.render }} {{ period.event.detailed_service.service.name }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="w3-green w3-small w3-padding-small">
+                                            <!-- style="border-top: 0px; border-bottom: 0px; " -->
+                                                <a>{{ period.render }}</a>
+                                            </li>
+                                        {% endif %} 
+
+                                        <div class="w3-green w3-border w3-large" id="pop_up_{{ period.event.id }}" style="display:none; position:absolute; padding: 10px;">
+                                            <a>{{ period.render }}</a>
+                                            <a class="w3-right">{{ period.event.feadback.client }}</a>
+                                            <br>
+                                            <a>{{ period.event.detailed_service }}</a>
+                                            <br>
+                                            <a class="w3-right">{{ period.event.price }} грн</a>
+                                        </div>
+
+                                    {% else %}
+
+                                        {% if period.start_event %}
+                                            <li id="calendar_period_" class="w3-red w3-small w3-padding-small" onmouseover='showElementById("pop_up_{{ period.event.id }}")' onmouseout='hideElementById("pop_up_{{ period.event.id }}")' onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer;"> 
+                                             <!-- border-bottom: 0px;  -->
+                                                <a>{{ period.render }} {{ period.event.detailed_service.service.name }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="w3-red w3-small w3-padding-small">
+                                            <!-- style="border-top: 0px; border-bottom: 0px; " -->
+                                                <a>{{ period.render }}</a>
+                                            </li>
+                                        {% endif %} 
+
+                                        <div class="w3-red w3-border w3-large" id="pop_up_{{ period.event.id }}" style="display:none; position:absolute; padding: 10px;">
+                                            <a>{{ period.render }}</a>
+                                            <a class="w3-right">{{ period.event.feadback.client }}</a>
+                                            <br>
+                                            <a>{{ period.event.detailed_service }}</a>
+                                            <br>
+                                            <a class="w3-right">{{ period.event.price }} грн</a>
+                                        </div>
+
+                                    {% endif %} 
+
+                                {% elif period.in_past %} 
+                                    <li class="w3-light-grey w3-small w3-padding-small">
+                                        <a>{{ period.render }}</a>
                                     </li>
                                 {% else %}
-                                    <li class="w3-green w3-small w3-padding-small">
-                                    <!-- style="border-top: 0px; border-bottom: 0px; " -->
+                                    <li class="w3-small w3-padding-small" onclick='goTo("{% url 'dgcrm:create_event' %}?datetime={{ period.period_datetime }}")' onmouseover="document.getElementById('{{ period.period_datetime }}').style.visibility = 'visible'" onmouseout="document.getElementById('{{ period.period_datetime }}').style.visibility = 'hidden'" style="cursor:pointer">
                                         <a>{{ period.render }}</a>
+                                        <i class="fa fa-plus-circle w3-right w3-large w3-text-red" id="{{ period.period_datetime }}" aria-hidden="true" style="visibility: hidden"></i>
                                     </li>
                                 {% endif %} 
 
-                                <div class="w3-green w3-border w3-large" id="pop_up_{{ period.event.id }}" style="display:none; position:absolute; padding: 10px;">
-                                    <a>{{ period.render }}</a>
-                                    <a class="w3-right">{{ period.event.feadback.client }}</a>
-                                    <br>
-                                    <a>{{ period.event.detailed_service }}</a>
-                                    <br>
-                                    <a class="w3-right">{{ period.event.price }} грн</a>
-                                </div>
-
-                            {% else %}
-
-                                {% if period.start_event %}
-                                    <li id="calendar_period_" class="w3-red w3-small w3-padding-small" onmouseover='showElementById("pop_up_{{ period.event.id }}")' onmouseout='hideElementById("pop_up_{{ period.event.id }}")' onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer;"> 
-                                     <!-- border-bottom: 0px;  -->
-                                        <a>{{ period.render }} {{ period.event.detailed_service.service.name }}</a>
-                                    </li>
-                                {% else %}
-                                    <li class="w3-red w3-small w3-padding-small">
-                                    <!-- style="border-top: 0px; border-bottom: 0px; " -->
-                                        <a>{{ period.render }}</a>
-                                    </li>
-                                {% endif %} 
-
-                                <div class="w3-red w3-border w3-large" id="pop_up_{{ period.event.id }}" style="display:none; position:absolute; padding: 10px;">
-                                    <a>{{ period.render }}</a>
-                                    <a class="w3-right">{{ period.event.feadback.client }}</a>
-                                    <br>
-                                    <a>{{ period.event.detailed_service }}</a>
-                                    <br>
-                                    <a class="w3-right">{{ period.event.price }} грн</a>
-                                </div>
-
-                            {% endif %} 
-
-                        {% elif period.in_past %} 
-                            <li class="w3-light-grey w3-small w3-padding-small">
-                                <a>{{ period.render }}</a>
-                            </li>
-                        {% else %}
-                            <li class="w3-small w3-padding-small" onclick='goTo("{% url 'dgcrm:create_event' %}?datetime={{ period.period_datetime }}")' onmouseover="document.getElementById('{{ period.period_datetime }}').style.visibility = 'visible'" onmouseout="document.getElementById('{{ period.period_datetime }}').style.visibility = 'hidden'" style="cursor:pointer">
-                                <a>{{ period.render }}</a>
-                                <i class="fa fa-plus-circle w3-right w3-large w3-text-red" id="{{ period.period_datetime }}" aria-hidden="true" style="visibility: hidden"></i>
-                            </li>
-                        {% endif %} 
-
+                                
+                            {% endfor %}
                         
-                    {% endfor %}
-                
-                </ul>
-            </div> 
-        {% endfor %}
+                        </ul>
+                    </div> 
+                {% endfor %}
+            </div>
+        </div>
+        <div class="w3-cell w3-display-container" style="width:10%">
+    
+            <a class="w3-display-middle w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2 w3-padding-32" next="{{ portfolio_pags.next_page_number }}" id="next_page"><i class="w3-xxxlarge fa fa-chevron-right" aria-hidden="true"></i></a>
+    
+        </div>
     </div>
 </div>
 
@@ -87,4 +103,41 @@
     function hideElementById(id) {
         document.getElementById(id).style.display = "none";
     }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on("click", "#prev_page", function() {
+            var url = "/";
+            var page = $(this).attr("prev");
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'page': page,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                    $('#works').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+        $(document).on("click", "#next_page", function() {
+            var url = "/";
+            var page = $(this).attr("next");
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'page': page,
+                       'csrfmiddlewaretoken': '{{csrf_token}}'
+                        },
+                success: function(data) {
+                  $('#works').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+    });
 </script>

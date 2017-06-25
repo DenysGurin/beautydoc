@@ -16,5 +16,6 @@ urlpatterns = [
     url(r'^crm/transfer_event/(?P<event_id>[0-9]+)/$', views.transferEvent, name='transfer_event'),
     url(r'^crm/cancel_event/(?P<event_id>[0-9]+)/$', views.cancelEvent, name='cancel_event'),
     url(r'^crm/client/(?P<client_id>[0-9]+)/$', views.DetailedClient.as_view(), name='detailed_client'),
+    url(r'^crm/change_week_calendar/$', views.changeWeekCalendar, name='change_week_calendar'),
     url(r'^crm/time/$', views.timeView, name='time'),
 ]  
