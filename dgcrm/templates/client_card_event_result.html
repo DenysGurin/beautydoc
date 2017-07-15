@@ -1,0 +1,14 @@
+{% if event.results %}
+    {% for result in event.results.all %}
+        <div class="results w3-card-4 w3-row" style="width:100% min-height:30vh">
+            <div class="w3-col w3-conteiner s7">
+                {% if result.photo %}
+                    <img class="" src="{{ result.photo.url }}" alt="{{ result.photo }}" style="width:100%">
+                {% endif %}
+            </div>
+            <div class="w3-col w3-conteiner s5 w3-padding w3-right">
+                {{ result.notes }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

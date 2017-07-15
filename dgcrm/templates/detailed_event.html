@@ -4,17 +4,11 @@
 {% load static %}
 {% load i18n %}
 
-{{ event }}
-{{ event.feadback.client }}
+<!-- {{ event }}
+{{ event.feadback.client }} -->
+{% include 'client_card.html' %}
 
-<form method="post" enctype="multipart/form-data">{% csrf_token %}
-  {{ result_form }}
-  <input type="submit" name="submit" value="result">
-</form>
-<br>
-<br>
-{% if not event.successful %}
-    <a href="{% url 'dgcrm:cancel_event' event.id %}">del</a>
-    <a href="{% url 'dgcrm:transfer_event_calendar' event.id %}">transfer_event</a>
-{% endif %}
+
+
+
 {% endblock %}

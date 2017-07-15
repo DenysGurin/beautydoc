@@ -24,16 +24,20 @@
 <body>
 <!-- First Parallax Image with Logo Text -->
 <div class="w3-top">
-  <div class="w3-bar w3-red w3-large w3-animate-top">
-  	{% if main_page %}
-    	<a href="#" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
-    {% else %}
-    	<a href="/crm/" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
-    {% endif %}
-    <a href="#calendar" class="w3-bar-item w3-button">КАЛЕНДАРЬ</a>
-    <a href="#" class="w3-bar-item w3-button">Link 2</a>
-    <a href="/crm/logout/" class="w3-bar-item w3-button w3-right">ВЫЙТИ</a>
-  </div>
+    <div class="w3-bar w3-red w3-large w3-animate-top">
+        {% if main_page %}
+            <a href="#" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
+            <a href="#calendar" class="w3-bar-item w3-button">КАЛЕНДАРЬ</a>
+            <a href="#clients" class="w3-bar-item w3-button">КЛИЕНТЫ</a>
+        {% else %}
+            <a href="/crm/#" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
+            <a href="/crm/#calendar" class="w3-bar-item w3-button">КАЛЕНДАРЬ</a>
+            <a href="/crm/#clients" class="w3-bar-item w3-button">КЛИЕНТЫ</a>
+        {% endif %}
+
+        
+        <a href="/crm/logout/" class="w3-bar-item w3-button w3-right">ВЫЙТИ</a>
+    </div>
 </div>
 
 <br><br>
@@ -41,11 +45,28 @@
 {% block content %}
 {% endblock %}
 
+
+<footer class="w3-container w3-red w3-center w3-margin-top">
+    <div class="w3-padding">Kiev, Ukraine</div>
+    <!-- <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i> -->
+    <div class="w3-padding">Made by Gurin Denys</div>
+</footer>
 </body>
 </html>
 
 <script type="text/javascript">
 function goTo(url) {
     location.href = url
+}
+function showElementById(id) {
+    document.getElementById(id).style.display = "block";
+}
+function hideElementById(id) {
+    document.getElementById(id).style.display = "none";
 }
 </script>

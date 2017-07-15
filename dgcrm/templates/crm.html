@@ -12,15 +12,15 @@
                 </div>
             </div>
         
-            <div class="w3-col s6 w3-animate-opacity">
+            <div class="w3-col s5 w3-animate-opacity">
                 <div class="w3-card-4">
                     {% include 'event.html' %}
                 </div>      
             </div>
 
-            <div class="w3-col s3 w3-animate-right">
+            <div class="w3-col s4 w3-animate-right">
                 <div class="w3-card-4">
-                    {% include 'client.html' %}
+                    {% include 'task.html' %}
                 </div>
             </div>
         </div>  
@@ -32,25 +32,27 @@
     <br><br><br>
     <div class="w3-cell-row">
         <div class="w3-cell w3-display-container" style="width:10%">
-            <a class="w3-display-middle w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2 w3-padding-32" id="prev_week"><i class="w3-xxxlarge fa fa-chevron-left" aria-hidden="true"></i></a>
+            <button class="w3-display-middle w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2 w3-padding-32" id="prev_week"><i class="w3-xxxlarge fa fa-chevron-left" aria-hidden="true"></i></button>
         </div>
         <div class="w3-cell w3-content w3-card-4 w3-animate-opacity" id="week_calendar" style="max-width:80%">
             {% include 'week_calendar.html' %}
         </div>
         <div class="w3-cell w3-display-container" style="width:10%">
-            <a class="w3-display-middle w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2 w3-padding-32" id="next_week"><i class="w3-xxxlarge fa fa-chevron-right" aria-hidden="true"></i></a>
+            <button class="w3-display-middle w3-button w3-animate-zoom w3-text-theme w3-hover-theme-d2 w3-padding-32" id="next_week"><i class="w3-xxxlarge fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
-    function showElementById(id) {
-        document.getElementById(id).style.display = "block";
-    }
-    function hideElementById(id) {
-        document.getElementById(id).style.display = "none";
-    }
-</script>
+<br><br>
+
+<div class="w3-conteiner" id="clients">
+    <br><br><br>
+    <div class="w3-content w3-card-4 w3-animate-opacity" id="week_calendar" style="max-width:80%">
+        {% include 'client.html' %}
+    </div>
+</div>
+
+<br><br><br>
 
 <script type="text/javascript">
     $(document).ready(function () {

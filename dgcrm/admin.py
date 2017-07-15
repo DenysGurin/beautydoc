@@ -2,8 +2,7 @@ from django.contrib import admin
 from django.db.models import ManyToManyField, ForeignKey
 
 # from main.models import Result, ClientServiceLinker, ClientResultLinker
-from .models import Feadback, Client, Event, Result, ClientServiceLinker#, ClientResultLinker
-
+from .models import Feadback, Client, Event, Result, Pay, Task, Price# ClientServiceLinker#, ClientResultLinker
 
 
 class FeadbackAdmin(admin.ModelAdmin):
@@ -20,13 +19,26 @@ class ClientAdmin(admin.ModelAdmin):
     fields = [field.name for field in Client._meta.fields if field.name not in ["id"]]
     readonly_fields = ("registration", )
 
+class ResultInline(admin.TabularInline):
+    model = Event.results.through
+
+class PayInline(admin.TabularInline):
+    model = Event.pays.through
 
 class EventAdmin(admin.ModelAdmin):
-    
-    list_display = [field.name for field in Event._meta.fields]
-    fields = [field.name for field in Event._meta.fields if field.name not in ["id"]]
-    # readonly_fields = ("date",)
+    inlines = [
+        ResultInline,
+        PayInline,
+    ]
 
+    list_display = [field.name for field in Event._meta.fields]
+    # fields = [field.name for field in Event._meta.fields if field.name not in ["id"]]
+    # # readonly_fields = ("date",)
+
+class PriceAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Price._meta.fields]
+    fields = [field.name for field in Price._meta.fields if field.name not in ["id"]]
+    readonly_fields = ("date",)
 
 class ResultAdmin(admin.ModelAdmin):
     
@@ -34,10 +46,22 @@ class ResultAdmin(admin.ModelAdmin):
     fields = [field.name for field in Result._meta.fields if field.name not in ["id"]]
 
 
-class ClientServiceLinkerAdmin(admin.ModelAdmin):
+class PayAdmin(admin.ModelAdmin):
     
-    list_display = [field.name for field in ClientServiceLinker._meta.fields]
-    fields = [field.name for field in ClientServiceLinker._meta.fields if field.name not in ["id"]]
+    list_display = [field.name for field in Pay._meta.fields]
+    fields = [field.name for field in Pay._meta.fields if field.name not in ["id"]]
+
+
+class TaskAdmin(admin.ModelAdmin):
+    
+    list_display = [field.name for field in Task._meta.fields]
+    fields = [field.name for field in Task._meta.fields if field.name not in ["id"]]
+
+
+# class ClientServiceLinkerAdmin(admin.ModelAdmin):
+    
+#     list_display = [field.name for field in ClientServiceLinker._meta.fields]
+#     fields = [field.name for field in ClientServiceLinker._meta.fields if field.name not in ["id"]]
 
 
 # class ClientResultLinkerAdmin(admin.ModelAdmin):
@@ -51,5 +75,8 @@ admin.site.register(Feadback, FeadbackAdmin)
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Result, ResultAdmin)
-admin.site.register(ClientServiceLinker, ClientServiceLinkerAdmin)
+admin.site.register(Pay, PayAdmin)
+admin.site.register(Task, TaskAdmin)
+admin.site.register(Price, PriceAdmin)
+# admin.site.register(ClientServiceLinker, ClientServiceLinkerAdmin)
 # admin.site.register(ClientResultLinker, ClientResultLinkerAdmin)

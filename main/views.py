@@ -93,12 +93,8 @@ class Main(View):
                 # email = feadback_form.cleaned_data['email']
                 # form.save()
                 feadback_data = feadback_form.cleaned_data
-                client_data = feadback_form.cleaned_data.copy()
-                del client_data['wish']
+                
                 # return HttpResponse(feadback_data, client_data)
-                client_obj, created = Client.objects.get_or_create(tel=client_data['tel'], defaults=client_data)
-
-                feadback_data["client"] = client_obj
 
                 Feadback.objects.create(**feadback_data)
 

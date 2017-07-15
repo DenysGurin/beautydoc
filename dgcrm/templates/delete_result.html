@@ -1,0 +1,35 @@
+{% extends "crm.html" %}
+
+{% block content %}
+{% load static %}
+{% load i18n %}
+<br><br><br>
+<div class="w3-content" style="width: 80%">
+    <form method="post">{% csrf_token %}
+    <div class="w3-card-4 w3-display-container" style="height: 50vh">
+
+        <header class="w3-container w3-red w3-display-top">
+          <h1>Вы уверены?</h1>
+        </header>
+
+        <div class="w3-container w3-display-middle">
+          <p>Результат {{result}} будет безвозвратно удален</p>
+        </div>
+        
+            <div class="w3-bar w3-display-bottommiddle">
+            
+                <button type="submit" name="submit" value="yes" class="w3-bar-item w3-button w3-hover-red" style="width: 50%">Да</button>
+                <button type="submit" name="submit" value="no" class="w3-bar-item w3-button w3-hover-red" style="width: 50%">Нет</button>
+            </div>
+        
+    </div>
+    </form>
+</div>
+<br><br><br>
+
+<!-- 
+    <input type="submit" name="submit" value="yes">
+    <input type="submit" name="submit" value="no"> -->
+
+
+{% endblock %}

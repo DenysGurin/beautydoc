@@ -13,7 +13,7 @@
                         <!-- <a>{{ period }}</a> -->
                         {% if period.event %}
 
-                            {% if period.event.successful %}
+                            {% if period.event.status == "successful" %}
 
                                 {% if period.start_event %}
                                     <li id="calendar_period_" class="w3-green w3-small w3-padding-small" onmouseover='showElementById("pop_up_{{ period.event.id }}")' onmouseout='hideElementById("pop_up_{{ period.event.id }}")' onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer;"> 
@@ -29,7 +29,7 @@
 
                                 <div class="w3-green w3-border w3-large" id="pop_up_{{ period.event.id }}" style="display:none; position:absolute; padding: 10px;">
                                     <a>{{ period.render }}</a>
-                                    <a class="w3-right">{{ period.event.feadback.client }}</a>
+                                    <a class="w3-right">{{ period.event.client }}</a>
                                     <br>
                                     <a>{{ period.event.detailed_service }}</a>
                                     <br>
@@ -52,7 +52,7 @@
 
                                 <div class="w3-red w3-border w3-large" id="pop_up_{{ period.event.id }}" style="display:none; position:absolute; padding: 10px;">
                                     <a>{{ period.render }}</a>
-                                    <a class="w3-right">{{ period.event.feadback.client }}</a>
+                                    <a class="w3-right">{{ period.event.client }}</a>
                                     <br>
                                     <a>{{ period.event.detailed_service }}</a>
                                     <br>
@@ -66,9 +66,10 @@
                                 <a>{{ period.render }}</a>
                             </li>
                         {% else %}
-                            <li class="w3-small w3-padding-small" onclick='goTo("{% url 'dgcrm:create_event' %}?datetime={{ period.period_datetime }}")' onmouseover="document.getElementById('{{ period.period_datetime }}').style.visibility = 'visible'" onmouseout="document.getElementById('{{ period.period_datetime }}').style.visibility = 'hidden'" style="cursor:pointer">
+                            <li class="w3-small w3-padding-small" onclick='goTo("{% url 'dgcrm:create_event' %}?datetime={{ period.period_datetime }}")' onmouseover="document.getElementById('calendar_{{ period.period_datetime }}').style.visibility = 'visible'" onmouseout="document.getElementById('calendar_{{ period.period_datetime }}').style.visibility = 'hidden'" style="cursor:pointer">
                                 <a>{{ period.render }}</a>
-                                <i class="fa fa-plus-circle w3-right w3-large w3-text-red" id="{{ period.period_datetime }}" aria-hidden="true" style="visibility: hidden"></i>
+                                <a class="w3-right w3-text-red" id="calendar_{{ period.period_datetime }}"  style="visibility: hidden">Добавить
+                                <i class="fa fa-plus-circle w3-large" aria-hidden="true"></i></a>
                             </li>
                         {% endif %} 
 
@@ -79,7 +80,6 @@
             </div> 
         {% endfor %}
     </div>
-
 
 
 

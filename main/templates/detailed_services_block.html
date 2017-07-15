@@ -3,7 +3,7 @@
     <p>The w3-border class adds a border around the list:</p>
     <ul class="w3-ul w3-card">
         {% for detailed in detailed_services %}
-            <li class="w3-hover-theme" onmouseover="myFunction('{{ detailed.id }}')" onmouseout="myFunction('{{ detailed.id }}')" style="cursor:pointer">
+            <li class="w3-hover-theme" onmouseover="showMore('{{ detailed.id }}')" onmouseout="showMore('{{ detailed.id }}')" style="cursor:pointer">
                 <div class="w3-display-container w3-large">{{ detailed.name }}
                     <span class="w3-display-right w3-medium">{{ detailed.price }}</span>
                 </div>

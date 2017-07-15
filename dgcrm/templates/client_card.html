@@ -1,0 +1,514 @@
+<script>
+    function discountPrice(price, discount) {
+        var price = parseInt(price);
+        var discount = parseInt(discount);
+        var discount_price = price*(1-discount/100);
+        document.write(discount_price);
+    }
+    function leftPay(price, pays) {
+        console.log(price)
+        console.log(pays)
+        var price = price;
+        var pays = pays;
+        var total = 0;
+        pays.forEach(function(item){
+            total += item;
+        });
+        console.log(total)
+        // var discount_price = price*(1-discount/100);
+
+        document.write(price - total);
+    }
+    // The function actually applying the offset
+function offsetAnchor() {
+    if(location.hash.length !== 0) {
+        window.scrollTo(window.scrollX, window.scrollY - 50);
+    }
+}
+
+// This will capture hash changes while on the page
+window.addEventListener("hashchange", offsetAnchor);
+
+// This is here so that when you enter the page with a hash,
+// it can provide the offset in that case too. Having a timeout
+// seems necessary to allow the browser to jump to the anchor first.
+window.setTimeout(offsetAnchor, 1); // The delay of 1 is arbitrary and may not always work right (although it did in my testing).
+</script>
+<!-- Page Container -->
+<div class="w3-content" style="max-width:1400px;">
+
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+    <!-- Left Column -->
+    <div class="w3-col w3-padding" style="width:20%">
+    
+        <div class="w3-white w3-text-grey w3-card-4">
+            <!-- <div class="w3-display-container">
+              <img src="img_avatar3.png" style="width:100%" alt="Avatar">
+              <div class="w3-display-bottomleft w3-container w3-text-black">
+                
+              </div>
+            </div> -->
+            <div class="w3-container">
+                <h2>{{ client.first }} {{ client.last }}</h2>
+                <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-red"></i>{{ client.tel }}</p>
+                <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-red"></i>{{ client.email }}</p>
+                <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-large w3-text-red"></i>{% if client.birthday %}{{ client.birthday }}{% endif %}</p>
+                <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-red"></i>{{ client.position }}</p>
+                <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-red"></i>{{ client.live_in }}</p>
+                <br>
+                <div class="w3-button w3-right w3-round-xlarge w3-red" onclick='showForm("form_client_{{client.id}}")'>Править<i class="fa fa-pencil fa-fw w3-large w3-text-white"></i></div>
+                <br>
+                <br>
+                <hr>
+                <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-red"></i>Любимые категории</b></p>
+                <p>Косметология</p>
+                <div class="w3-light-grey w3-round-xlarge w3-small">
+                    <div class="w3-container w3-center w3-round-xlarge w3-red" style="width:90%">90%</div>
+                </div>
+                <p>Инъекции</p>
+                <div class="w3-light-grey w3-round-xlarge w3-small">
+                    <div class="w3-container w3-center w3-round-xlarge w3-red" style="width:80%">
+                        <div class="w3-center w3-text-white">80%</div>
+                    </div>
+                </div>
+                <p>Лазерные процедуры</p>
+                <div class="w3-light-grey w3-round-xlarge w3-small">
+                    <div class="w3-container w3-center w3-round-xlarge w3-red" style="width:75%">75%</div>
+                </div>
+                <p>Дерматология</p>
+                <div class="w3-light-grey w3-round-xlarge w3-small">
+                    <div class="w3-container w3-center w3-round-xlarge w3-red" style="width:50%">50%</div>
+                </div>
+                <br>
+
+                <p class="w3-large w3-text-theme"><b><i class="fa fa-money fa-fw w3-margin-right w3-text-red"></i>Оплачено по категориям</b></p>
+                <p>Косметология</p>
+                <div class="w3-light-grey w3-round-xlarge">
+                    <div class="w3-round-xlarge w3-red" style="height:24px;width:100%">10000 грн</div>
+                </div>
+                <p>Инъекции</p>
+                <div class="w3-light-grey w3-round-xlarge">
+                    <div class="w3-round-xlarge w3-red" style="height:24px;width:55%">5000 грн</div>
+                </div>
+                <p>Лазерные процедуры</p>
+                <div class="w3-light-grey w3-round-xlarge">
+                    <div class="w3-round-xlarge w3-red" style="height:24px;width:25%">2500 грн</div>
+                </div>
+                <p>Дерматология</p>
+                <div class="w3-light-grey w3-round-xlarge">
+                    <div class="w3-round-xlarge w3-red" style="height:24px;width:25%">2500 грн</div>
+                </div>
+                <br>
+            </div>
+            <div id="form_client_{{client.id}}" class="w3-modal" style="padding-top: 10vh;">
+
+                <div class="w3-modal-content w3-animate-zoom" style="width:100vh height:100vh">
+                <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <header class="w3-container w3-red"><h4>Данные клиента</h4><span class="w3-button w3-hover-red w3-display-topright" onclick='hideForm("form_client_{{client.id}}")'><i class="fa fa-times"></i></span></header>
+                    <div class="w3-row-padding w3-container w3-padding">
+                        <div class="w3-col w3-half">
+                            <label class="w3-text-red"><b>{{ client_form.first.label }}</b></label>
+                            <div>{{ client_form.first }}</div>
+                        </div>    
+                        <div class="w3-col w3-half">
+                            <label class="w3-text-red"><b>{{ client_form.last.label }}</b></label>
+                            <div>{{ client_form.last }}</div> 
+                        </div>
+                    </div>
+
+                    <div class="w3-row-padding w3-container w3-padding">
+                        <div class="w3-col w3-half">
+                            <label class="w3-text-red"><b>{{ client_form.tel.label }}</b></label>
+                            <div>{{ client_form.tel }}</div>
+                        </div>  
+                        <div class="w3-col w3-half">                                     
+                            <label class="w3-text-red"><b>{{ client_form.email.label }}</b></label>
+                            <div>{{ client_form.email }}</div>  
+                        </div>  
+                    </div> 
+
+                    <div class="w3-row-padding w3-container w3-padding">
+                        <div class="w3-col w3-half">
+                            <label class="w3-text-red"><b>{{ client_form.birthday.label }}</b></label>
+                            <div>{{ client_form.birthday }}</div> 
+                        </div>    
+                        <div class="w3-col w3-half">
+                            <label class="w3-text-red"><b>{{ client_form.position.label }}</b></label>
+                            <div>{{ client_form.position }}</div> 
+                        </div>   
+                    </div>
+
+                    <div class="w3-row-padding w3-container w3-padding">
+                        <div class="w3-col w3-half">
+                            <label class="w3-text-red"><b>{{ client_form.live_in.label }}</b></label>
+                            <div>{{ client_form.live_in }}</div>       
+                        </div>
+                    </div> 
+                    <input type="hidden" name="event_id" value="{{event.id}}">                                        
+                    <div class="w3-container w3-padding">
+                        <span class="w3-right"><button class="w3-button w3-hover-red w3-round-xlarge w3-text-black" type="submit" name="submit" value="edit_client">Изменить</button></span>
+                    </div>                                   
+                </form>
+                </div>                               
+            </div>
+        </div><br>
+
+    <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div class="w3-rest">
+    
+        <div class="w3-container w3-white w3-margin-bottom">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-user-md fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>История записи</h2>
+        <!-- <ul class="w3-ul" id="feadback_list" style="height: 64vh; overflow: auto;">
+            {% include 'feadback_list_ajax.html' %}
+        </ul> -->
+        <ul class="w3-ul">
+            {% if event_list %}
+                {% for event in event_list %}
+                    {% if event_id == event.id %}
+                    <li id="event_header_{{ event.id }}" class="event_header w3-red" onclick="showMore('event_{{ event.id }}', this)" style="cursor:pointer">
+                    {% else %}
+                    <li id="event_header_{{ event.id }}" class="event_header w3-white" onclick="showMore('event_{{ event.id }}', this)" style="cursor:pointer">
+                    {% endif %}
+                        <div class="w3-content">
+                            <div class="w3-large">{{ event.detailed_service }}<span class="w3-text-red w3-right"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ event.date_time|date:"d m Y H:i" }} </span></div>
+                            <div class="">Не оплачено<span class="w3-tag w3-red w3-round w3-right">{{ event.status }}</span></div>
+                        </div>
+                    </li>
+                    <div class="w3-container">
+                        {% if event_id == event.id %}
+                        <div id="event_{{ event.id }}" class="event_body w3-show">
+                        {% else %}
+                        <div id="event_{{ event.id }}" class="event_body w3-hide">
+                        {% endif %}
+                            <div class="w3-bar">
+                                
+                                <form method="post">{% csrf_token %}
+                                {{ detailed_event_form.status }}
+                                <input type="hidden" name="event_id" value="{{event.id}}">
+                                <!-- <input type="submit" name="submit" value="change_status"> -->
+                                </form>
+                                
+                                {% if not event_period.is_in_past and event_period%}
+                                    <div class="w3-bar-item w3-hover-red w3-round-xlarge w3-button" onclick='goTo("{% url 'dgcrm:transfer_event_calendar' event.id %}")'>Перенести запись</div>
+                                {% endif %}
+                                {% if not event.price %}
+                                <div class="w3-bar-item w3-hover-red w3-round-xlarge w3-button" onclick='showForm("form_add_price_{{event.id}}")'>Добавить стоимость</div>
+                                {% else %}
+                                <div class="w3-bar-item w3-hover-red w3-round-xlarge w3-button" onclick='showForm("form_add_price_{{event.id}}")'>Изменить стоимость</div>
+                                {% endif %}
+                                <div class="w3-bar-item w3-hover-red w3-round-xlarge w3-button" onclick='showForm("form_add_pay_{{event.id}}")'>Добавить оплату</div>
+                                <div class="w3-bar-item w3-hover-red w3-round-xlarge w3-button" onclick='showForm("form_add_result_{{event.id}}")'>Добавить результат</div>
+                                <div class="w3-bar-item w3-hover-red w3-round-xlarge w3-button" onclick='goTo("{% url 'dgcrm:delete_event' event.id %}")'>Удалить событие</div>
+                            </div>
+                            {% if event.results.all.count > 0 %}
+                                <div class="w3-container w3-padding">
+                                    <header><h3>Результаты процедуры</h3></header>
+                                </div>
+                                <div class="w3-row-padding ">
+                                    <div class="w3-col w3-container s9">
+                                        {% if event.results %}
+                                            {% for result in event.results.all %}
+                                                {% if event.results.all.0 == result %}
+                                                <div id="result_{{ result.id }}" class="results_event_{{ event.id }} w3-card-4 w3-row w3-show" style="width:100%; min-height:30vh">
+                                                {% else %}
+                                                <div id="result_{{ result.id }}" class="results_event_{{ event.id }} w3-card-4 w3-row w3-hide" style="width:100%; min-height:30vh">
+                                                {% endif %}
+                                                
+                                                    <div class="w3-col w3-container s7">
+                                                        <header><h4>Фото</h4></header>
+                                                        <div class="w3-display-container">
+                                                        {% if result.photo %}
+                                                            <img class="" src="{{ result.photo.url }}" alt="{{ result.photo }}" style="width:100%; height:100%; padding-bottom: 20px">
+                                                        {% else %}
+                                                            <div class="w3-padding-64 w3-center"><br><br>нет фото</div>
+                                                        {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="w3-col w3-container s5 w3-padding w3-right" style="min-height:60vh">
+                                                        <header><h4>Заметки</h4></header>
+                                                        {{ result.notes }}
+                                                        
+                                                    </div>
+                                                    <div class="w3-bar w3-padding">
+                                                        <div class="w3-bar-item w3-right w3-hover-red w3-round-xlarge w3-button" onclick='goTo("{% url 'dgcrm:delete_result' event.id result.id %}")'>Удалить <!-- <i class="fa fa-times"></i> --></div>
+                                                        <div class="w3-bar-item w3-right w3-hover-red w3-round-xlarge w3-button" onclick='showForm("form_client_{{client.id}}")'>Редактировать <!-- <i class="fa fa-pencil"></i> --></div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="w3-col w3-container s3 w3-right">
+                                        
+                                        <ul class="w3-ul w3-container" style="width:100% min-height:30vh">
+                                            {% for result in event.results.all %}
+                                                <li class="w3-bottombar w3-border-red w3-button w3-hover-red" onclick="showEventResult(this, 'result_{{ result.id }}', 'results_event_{{ event.id }}')">
+                                                    {{ result.date|date:"d m Y H:i" }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                        
+                                    </div>
+                                    <br>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="w3-container w3-padding">
+                                <header><h3>Финансы</h3></header>
+                            </div>
+                            <div class="w3-content w3-row-padding">
+                                <div class="w3-col s4 w3-large">
+                                    <div>Полная стоимость: <span class="w3-right">{{ event.price }}</span></div>
+                                    {% if event.price.brutto_price %}
+                                    <div>Закупочная стоимость: <span class="w3-right">{{ event.price.brutto_price }} {{ event.price.currency }}</span></div>
+                                    {% else %}
+                                    <div>Закупочная стоимость: <span class="w3-right">{{ event.price.currency }}</span></div>
+                                    {% endif %}
+                                    {% if event.price.discount > 0 %}
+                                        <div>Скидка: <span class="w3-right">{{ event.price.discount }} %</span></div>
+                                        <div>Стоимость со скидкой: 
+                                            <span class="w3-right"><script type="text/javascript">discountPrice("{{ event.price }}", "{{ event.price.discount }}");</script> {{ event.price.currency }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div>Осталось к оплате: <span class="w3-right"><script type="text/javascript">leftPay({{ event.price.customer_price }}, [{% for pay in event.pays.all %}{{pay.pay|escapejs}},{% endfor %}])</script> {{ event.price.currency }}</span>
+                                    </div>
+                                </div>
+                                {% if event.pays.all.count > 0 %}
+                                <div class="w3-col s8 w3-padding">
+                                    <div class="w3-card-4 w3-center" style="min-height:23vh">
+                                        <table class="w3-table w3-bordered">
+                                            <thead>
+                                                <tr class="w3-red">
+                                                    <th>Оплатa</th>
+                                                    <th>Дата</th>
+                                                </tr>
+                                            </thead>
+                                            {% for pay in event.pays.all %}
+                                            <tr>
+                                                <td>{{ pay.pay }} {{ event.price.currency }}</td>
+                                                <td>{{ pay.date_time|date:"d m Y H:i" }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                                                        
+                            <div id="form_add_result_{{event.id}}" class="w3-modal" style="padding-top: 10vh;">
+
+                                <div class="w3-modal-content w3-animate-zoom" style="width:100vh height:100vh">
+                                <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                                    <header class="w3-container w3-red"><h4>Добавить результат</h4><span class="w3-button w3-hover-red w3-display-topright" onclick='hideForm("form_add_result_{{event.id}}")'><i class="fa fa-times"></i></span></header>
+                                    <div class="w3-container w3-row-padding w3-padding">
+                                        <div class="w3-col s6">      
+                                            <label class="w3-text-red"><b>{{ result_form.notes.label }}</b></label>
+                                            <br>
+                                            {{ result_form.notes }}
+                                            <br>
+                                        </div>
+                                        <div class="w3-col s6">      
+                                            <label class="w3-text-red"><b>{{ result_form.date.label }}</b></label>
+                                            <br>
+                                            {{ result_form.date }}
+                                            <label class="w3-text-red"><b>{{ result_form.poto.label }}</b></label>
+                                            <br>
+                                            {{ result_form.photo }}
+                                        </div>
+                                        <input type="hidden" name="event_id" value="{{event.id}}">
+                                    </div>
+                                    <div class="w3-container w3-padding">
+                                        <span class="w3-right"><button class="w3-button w3-hover-red w3-round-xlarge" type="submit" name="submit" value="add_result">Добавить</button></span>
+                                    </div>
+                                    
+                                </form>
+                                </div>                               
+                            </div>
+                            <div id="form_add_pay_{{event.id}}" class="w3-modal" style="padding-top: 10vh;">
+
+                                <div class="w3-modal-content w3-animate-zoom" style="width:100vh height:100vh">
+                                <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                                    <header class="w3-container w3-red"><h4>Добавить оплату</h4><span class="w3-button w3-hover-red w3-display-topright" onclick='hideForm("form_add_pay_{{event.id}}")'><i class="fa fa-times"></i></span></header>
+                                    <div class="w3-container w3-padding">
+                                            
+                                        <label class="w3-text-red"><b>{{ pay_form.pay.label }}</b></label>
+                                        
+                                        {{ pay_form.pay }}
+                                        <br>                                      
+                                        <label class="w3-text-red"><b>{{ pay_form.date_time.label }}</b></label>
+                                        <br>
+                                        {{ pay_form.date_time }}                                        
+                                        <input type="hidden" name="event_id" value="{{event.id}}">                                        
+                                    </div>
+                                    <div class="w3-container w3-padding">
+                                        <span class="w3-right"><button class="w3-button w3-hover-red w3-round-xlarge" type="submit" name="submit" value="add_pay">Оплатить</button></span>
+                                    </div>                                   
+                                </form>
+                                </div>                               
+                            </div>
+                            <div id="form_add_price_{{event.id}}" class="w3-modal" style="padding-top: 10vh;">
+
+                                <div class="w3-modal-content w3-animate-zoom" style="width:100vh height:100vh">
+                                <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                                    <header class="w3-container w3-red"><h4>Изменить стоимость</h4><span class="w3-button w3-hover-red w3-display-topright" onclick='hideForm("form_add_price_{{event.id}}")'><i class="fa fa-times"></i></span></header>
+                                    <div class="w3-row-padding w3-container w3-padding">
+                                        <div class="w3-col s10">
+                                            <label class="w3-text-red"><b>{{ price_form.brutto_price.label }}</b></label>
+                                            <div>{{ price_form.brutto_price }}</div>  
+                                            <br>                                      
+                                            <label class="w3-text-red"><b>{{ price_form.customer_price.label }}</b></label>
+                                            <div>{{ price_form.customer_price }}</div>  
+                                            <br>  
+                                            <label class="w3-text-red"><b>{{ price_form.discount.label }}</b></label>
+                                            <div>{{ price_form.discount }}</div>   
+                                            <br>  
+                                        </div>    
+                                        <div class="w3-col s2">
+                                            <label class="w3-text-red"><b>{{ price_form.currency.label }}</b></label>
+                                            <div>{{ price_form.currency }}</div>   
+                                            <br>                       
+                                        </div>             
+                                        <input type="hidden" name="event_id" value="{{event.id}}">                                        
+                                    </div>
+                                    <div class="w3-container w3-padding">
+                                        <span class="w3-right"><button class="w3-button w3-hover-red w3-round-xlarge" type="submit" name="submit" value="add_pay">Изменить</button></span>
+                                    </div>                                   
+                                </form>
+                                </div>                               
+                            </div>
+                            
+                            
+                                
+                            
+                            <!-- <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                                {{ pay_form }}
+                                <input type="hidden" name="event_id" value="{{event.id}}">
+                                <input type="submit" name="submit" value="add_pay">
+                            </form> -->
+                            <br>
+                            <br>
+                            <!-- <a href="{% url 'dgcrm:crm_main' %}">back to main</a> -->
+                            <hr>
+                        </div>
+                        
+                    </div>
+                    
+                {% endfor %}
+            {% endif %}
+          
+        </ul>
+    
+    <!-- End Right Column -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  
+  <!-- End Page Container -->
+</div>
+
+<script type="text/javascript">
+    {% if event_id %}
+        var before_id = "event_{{event_id}}";
+        // console.log(before_id)
+    {% else %}
+        var before_id = null;
+        // console.log(before_id)
+    {% endif %}
+    
+    function isHide(str) {
+        return str == "w3-hide";
+    }
+
+    function isShow(str) {
+        return str == "w3-show";
+    }
+
+    function isWhite(str) {
+        return str == "w3-white";
+    }
+
+    function isRed(str) {
+        return str == "w3-red";
+    }
+
+    function isBottomBar(str) {
+        return str == "w3-bottombar";
+    }
+    
+    function showForm(form_id) {
+        document.getElementById(form_id).style.display = "block";
+    }
+
+    function hideForm(form_id) {
+        document.getElementById(form_id).style.display = "none";
+    }
+
+    function showMore(id, this_header) {
+
+        var event_headers = document.getElementsByClassName("event_header");
+        for (i = 0; i < event_headers.length; i++) {
+            // console.log(this_header.id)
+            if ((event_headers[i].className.split(" ").find(isRed)) && (this_header != event_headers[i])){
+                event_headers[i].className = event_headers[i].className.replace("w3-red", "w3-white");
+            }
+        } 
+
+        var event_bodies = document.getElementsByClassName("event_body");
+        for (i = 0; i < event_bodies.length; i++) {
+            if ((event_bodies[i].className.split(" ").find(isShow)) && (event_bodies[i].id != id)) {
+                event_bodies[i].className = event_bodies[i].className.replace("w3-show", "w3-hide");
+            } 
+        } 
+
+        var current = document.getElementById(id);
+        // if ((before_id) && (before_id != id)){
+        //     var before = document.getElementById(before_id);
+        //     console.log(before)
+        //     before.className = before.className.replace("w3-show", "w3-hide");
+        // }
+        if (current.className.split(" ").find(isHide)) {
+            location.href = "#"+this_header.id
+            current.className = current.className.replace("w3-hide", "w3-show");
+        } else { 
+            current.className = current.className.replace("w3-show", "w3-hide");
+        }
+        before_id = id
+        
+        // console.log(current.className.split(" ").find(isHide))
+        // console.log(this_header)
+        // var header = document.getElementById(this);
+        if (this_header.className.split(" ").find(isWhite)) {
+            this_header.className = this_header.className.replace("w3-white", "w3-red");
+        } else { 
+            this_header.className = this_header.className.replace("w3-red", "w3-white");
+        }
+        
+    }
+
+    function showEventResult(this_body, result_id, results_event_id) {
+        // var this_body = this_body
+        // if (this_body.className.split(" ").find(isBottomBar)) {
+        //     this_body.className = this_body.className.replace("w3-bottombar", "");
+        // }
+
+        var event_results = document.getElementsByClassName(results_event_id);
+        for (i = 0; i < event_results.length; i++) {
+            // console.log(event_results[i].id)
+            if ((event_results[i].className.split(" ").find(isShow)) && (result_id != event_results[i].id)){
+                event_results[i].className = event_results[i].className.replace("w3-show", "w3-hide");
+            }
+        } 
+
+        var result = document.getElementById(result_id);
+        // console.log(result)
+        if (result.className.split(" ").find(isHide)) {
+            result.className = result.className.replace("w3-hide", "w3-show");
+        }
+    }
+</script>

@@ -8,20 +8,34 @@
 </li>
 {% for period in periods %}
     {% if period.event %}
-     <li class="w3-red" onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer">
-        <a>{{ period.render }}</a>
-        <a class="w3-right">{{ period.event.feadback.client }}</a>
-        <br>
-        <a>{{ period.event.detailed_service }}</a>
-        <a class="w3-right">{{ period.event.price }} грн</a>
-        <a></a>
-
-    </li>
+        {% if period.event.status == "successful" %}
+             <li class="w3-green" onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer">
+                <a>{{ period.render }}</a>
+                <a class="w3-right">{{ period.event.client.first }} {{ period.event.client.last }}</a>
+                <br>
+                <a>{{ period.event.detailed_service }}</a>
+                <a class="w3-right">{{ period.event.price }} грн</a>
+            </li>
+        {% else %}
+            <li class="w3-red" onclick='goTo("{% url 'dgcrm:detailed_event' period.event.id %}")' style="cursor:pointer">
+                <a>{{ period.render }}</a>
+                <a class="w3-right">{{ period.event.client.first }} {{ period.event.client.last }}</a>
+                <br>
+                <a>{{ period.event.detailed_service }}</a>
+                <a class="w3-right">{{ period.event.price }} грн</a>
+            </li>
+        {% endif %}
+        
+    {% elif period.in_past %} 
+        <li class="w3-light-grey">
+            <a>{{ period.render }}</a>
+        </li>
     {% else %}
-    <li onclick='goTo("{% url 'dgcrm:create_event' %}?datetime={{ period.period_datetime }}")' onmouseover="document.getElementById('{{ period.period_datetime }}').style.visibility = 'visible'" onmouseout="document.getElementById('{{ period.period_datetime }}').style.visibility = 'hidden'" style="cursor:pointer">
-        <a>{{ period.render }}</a>
-        <i class="fa fa-plus-circle w3-right w3-xlarge w3-text-red" id="{{ period.period_datetime }}" aria-hidden="true" style="visibility: hidden"></i>
-    </li>
+        <li onclick='goTo("{% url 'dgcrm:create_event' %}?datetime={{ period.period_datetime }}")' onmouseover="document.getElementById('{{ period.period_datetime }}').style.visibility = 'visible'" onmouseout="document.getElementById('{{ period.period_datetime }}').style.visibility = 'hidden'" style="cursor:pointer">
+            <a>{{ period.render }}</a>
+            <a class="w3-right w3-text-red" id="{{ period.period_datetime }}"  style="visibility: hidden">Добавить
+            <i class="fa fa-plus-circle w3-xlarge" aria-hidden="true"></i></a>
+        </li>
     {% endif %}
     
 {% endfor %}

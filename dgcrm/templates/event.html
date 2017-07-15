@@ -2,7 +2,7 @@
     {% if periods %}
         <ul class="w3-ul">
             <li class="w3-red w3-large">Записи</li> 
-            <div class="w3-bar">
+            <!-- <div class="w3-bar">
                 <form method="post">{% csrf_token %}
                     <a href="#" class="w3-bar-item w3-button">На день</a>
                     <a href="#" class="w3-bar-item w3-button">На неделю</a>
@@ -10,9 +10,9 @@
                     <a class="w3-bar-item w3-input w3-small">{{serch_form.search}}</a>
                     <a class="w3-bar-item w3-input w3-small">{{serch_form.search}}</a>
                 </form>
-            </div>
+            </div> -->
         </ul>
-        <ul class="w3-ul" style="height: 65vh; overflow: auto;">
+        <ul class="w3-ul" style="height: 75vh; overflow: auto;">
 
         {% include 'events_onday.html' %}       
         

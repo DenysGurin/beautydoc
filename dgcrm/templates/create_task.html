@@ -6,10 +6,8 @@
 
 
 <form method="post">{% csrf_token %}
-  {{ feadback_form }}
-  {{ event_form }}
-  {{ price_form }}
-  <input type="submit" name="submit" value="create_event">
+  {{ task_form }}
+  <input type="submit" name="submit" value="create_task">
 </form>
 
 {% endblock %}

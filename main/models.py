@@ -49,6 +49,7 @@ class DetailedService(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=30, default="", blank = True)
     price = models.CharField(max_length=30, default="", blank = True)
+    brutto_price = models.IntegerField(default=0, blank = True, null=True)
     description = models.TextField(default="", blank = True)
 
     def __str__(self):

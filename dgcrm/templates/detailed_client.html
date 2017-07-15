@@ -4,30 +4,34 @@
 {% load static %}
 {% load i18n %}
 
-{{ client }}
+
 <br>
-<br>
-<div>История процедур</div>
-{% if detailed_service_list %}
-    {% for detailed_service in detailed_service_list %}
-      <a href="{% url 'dgcrm:detailed_client' client.id %}">{{ detailed_service }}</a>
-      <br>
+
+
+<!-- {% if event_list %}
+    <div>История процедур</div>
+    {% for event in event_list %}
+        {% if event.status == "successful" %}
+            <a href="{% url 'dgcrm:detailed_client' client.id %}">{{ event.detailed_service }}</a>
+            <br>
+        {% endif %}
     {% endfor %}
 {% endif %}
-<br>
-<br>
-<div>История результатов</div>
+
 {% if result_list %}
+    <div>История результатов</div>
     {% for result in result_list %}
-      <a href="{% url 'dgcrm:detailed_client' client.id %}">{{ result }}</a>
-      <br>
+        <a href="{% url 'dgcrm:detailed_client' client.id %}">{{ result }}</a>
+        <br>
     {% endfor %}
 {% endif %}
 <br>
-<br>
+<br> -->
 <!-- <form method="post">{% csrf_token %}
-  {{ event_form }}
-  <input type="submit" name="submit" value="event">
+{{ event_form }}
+<input type="submit" name="submit" value="event">
 </form> -->
+
+{% include 'client_card.html' %}
 
 {% endblock %}
