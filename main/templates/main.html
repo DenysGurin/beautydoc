@@ -47,15 +47,14 @@
 <!-- <div class="w3-padding" >
  -->  <!-- Header/Home -->
 
-<div class="main w3-padding-32 w3-center" id="home">
+<div class="main w3-padding-64 w3-center" id="home" style="height:100vh">
   
   <h1 class="w3-jumbo"><span class="w3-hide-small"></span>_dr.svetlanavladimirovna_</h1>
   <div class="w3-content w3-padding-32">
     <img class="w3-animate-zoom " src="{% static 'main/img/lips_icon.svg' %}" style="width:50%;">
   </div>
   <p>ДЕРМАТОЛОГ|КОСМЕТОЛОГ|СПЕЦИАЛИСТ ПО ЛАЗЕРНЫМ МЕТОДИКАМ |ЧЛЕН EADV</p>
-  <br>
-  <br>
+  
   
 </div>
 <!-- <div class="main w3-justify w3-display-container " id="about" style="height:400px;background-image: url('{% static 'main/img/background.jpg' %}');opacity: 0.9">
@@ -65,9 +64,10 @@
 </div> -->
 
 <!-- About Section -->
-<div class="main w3-justify w3-display-container" id="about" style="background: #fffcfc;">
-  <img src="{% static 'main/img/background3.jpg' %}" style="width: 100%; max-height: 650px;  opacity: 0.15">
-  <div class="w3-content w3-display-middle" style="width: 120%; ">
+<!--<div class="main w3-padding-64 w3-justify w3-display-container" id="about" style="height:100vh; background: #fffcfc;">-->
+<div class="main w3-padding-64 w3-justify w3-display-container" id="about" style="height:100vh;">
+  <img src="{% static 'main/img/background3.jpg' %}" style="width: 100%; opacity: 0.15">
+  <div class="w3-content w3-display-topmiddle w3-padding-64" style="width: 100%; ">
     <h2 class="">Обо мне</h2>
     <hr style="width:200px" class="w3-opacity">
     <p class="w3-text-black">Some text about me. Some text about me. I am lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
@@ -95,7 +95,7 @@
     <!-- <div class="w3-white">
       <div class="w3-theme" style="height:28px;width:80%"></div>
     </div> -->
-    <br>
+    
 
     <!-- <div class="w3-row w3-center w3-padding-4 w3-section w3-theme-d2  w3-round-xlarge w3-text-white">
       <div class="w3-quarter w3-section">
@@ -115,15 +115,12 @@
         Meetings
       </div>
     </div>  -->   
-    <br>
-    <br>
-    <br>
-    <br>
+    
   <!-- End About Section -->
   </div>
 </div>
   <!-- Portfolio Section -->
-<div class="main w3-padding-16 w3-small w3-hide-small" id="photos">
+<div class="main w3-padding-64 w3-small w3-hide-small" id="photos" style="height:100vh">
 
   <div class="w3-content">
     <h2 class="">Работы</h2>
@@ -142,21 +139,24 @@
 
 
 <!-- Price Section -->
-<div class="main w3-padding-16 w3-display-container" id="price" style="background: #fffcfc;">
+<!--<div class="main w3-padding-64 w3-display-container" id="price" style="height:100vh; background: #fffcfc;">-->
+<div class="main w3-padding-64 w3-display-container" id="price" style="height:100vh;">
   <img src="{% static 'main/img/background2.jpg' %}" style="width: 100%; max-height: 650px;  opacity: 0.15">
-  <div class="w3-content w3-display-middle" style="width: 120%">
-    <br>
-    <br>
-    <br>
-    <br>
-    <h2>Цены</h2>
+  <div class="w3-content w3-display-topmiddle w3-padding-64" style="width: 100%">
+    <h2>Прайс</h2>
     <hr style="width:200px" class="w3-opacity">
     <div class="w3-content w3-center w3-row-padding">
 
     {% include 'services.html' %}
     
     <!-- End Grid/Pricing tables -->
+    </div>
   </div>
+  <div class="w3-content w3-display-bottommiddle w3-center w3-padding-32">
+      <div class="w3-section">
+        <a class="w3-button w3-theme-d2 w3-opacity-min w3-round-xlarge w3-text-white" href="/price/"> Детальный прайс
+        </a>
+    </div>
   </div>
   <!-- Grid for pricing tables -->
   
@@ -164,7 +164,7 @@
 </div>
 
 <!-- Contact Section -->
-<div class="main w3-padding-16" id="contact">
+<div class="main w3-padding-64" id="contact" style="height:100vh">
   <div class="w3-content">
     <h2>Запись</h2>  
     <hr style="width:200px" class="w3-opacity">
@@ -249,15 +249,15 @@
 </div>
 
 <!-- Location Section -->
-<div class="main w3-padding-16" id="location">
+<div class="main w3-padding-64" id="location" style="height:100vh;">
   <div class="w3-content">
     <h2 class="">Контакты</h2>
     <hr style="width:200px" class="w3-opacity">
     
     <div class="w3-row-padding">
       <div class="w3-third"><i class="fa fa-map-marker fa-fw w3-text-red w3-xxlarge w3-margin-right"></i><a href="https://www.google.com.ua/maps/place/вулиця+Велика+Васильківська,+89,+Київ,+02000/" target="_blank"> Киев, Большая Васильковская 89, Украина</a></div>
-      <div class="w3-third"><i class="fa fa-phone fa-fw w3-text-red w3-xxlarge w3-margin-right"></i> Мобильный: +38 093 669 35 65</div>
-      <div class="w3-third"><i class="fa fa-envelope fa-fw w3-text-red w3-xxlarge w3-margin-right"> </i> Email: svetlanakutsachenko@gmail.com</div>
+      <div class="w3-third"><i class="fa fa-phone fa-fw w3-text-red w3-xxlarge w3-margin-right"></i><a href="tel:+380936693565" target="_blank"> Мобильный: +38 093 669 35 65</a></div>
+      <div class="w3-third"><i class="fa fa-envelope fa-fw w3-text-red w3-xxlarge w3-margin-right"> </i><a href="mailto:svetlanakutsachenko@gmail.com" target="_blank">  Email: svetlanakutsachenko@gmail.com</a></div>
       
     </div>
     <!-- Google Map -->
@@ -267,7 +267,7 @@
 <!-- End Location Section -->
 </div>
 <!-- Reviews Section-->
-<div class="main w3-padding-16" id="review">
+<div class="main w3-padding-64" id="review" style="height:90vh">
   <div class="w3-content">
     <h2 class="">Отзывы</h2>
     <hr style="width:200px" class="w3-opacity">

@@ -1,4 +1,4 @@
-<div class="w3-row" id="services_block">
+<div class="w3-row" id="services_block" style="height:90hv;">
 {% for service in services %}
     {% if service.id == service_id %}
         <div class="w3-col w3-button w3-theme-l1 w3-hover-theme-l1 serv_btn" id="current_serv" service_id="{{ service_id }}" onclick='changeCurrent("serv_btn", "{{service.id}}", "serv_id", "w3-white", "w3-theme-l1")' serv_id="{{service.id}}" style="width: {{ serv_size }}%">

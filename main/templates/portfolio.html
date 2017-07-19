@@ -31,11 +31,22 @@
     {% endif %}
 </p>
 <br>
-<div class="w3-content w3-row w3-center w3-padding-32 w3-section w3-theme-d2 w3-opacity-min w3-round-xlarge w3-text-white">
-    <span class="w3-bar-item w3-large">
-        Page {{ portfolio_pags.number }} of {{ portfolio_pags.paginator.num_pages }}.
-    </span>
-</div>    
+<!--<div class="w3-content w3-row w3-center w3-padding-32 w3-section w3-theme-d2 w3-opacity-min w3-round-xlarge w3-text-white">-->
+<!--    {{ portfolio_pags }}-->
+    
+<!--    <span class="w3-bar-item w3-large">-->
+<!--        Page {{ portfolio_pags.number }} of {{ portfolio_pags.paginator.num_pages }}.-->
+<!--    </span>-->
+<!--</div>-->
+<div class="w3-content w3-center w3-padding-32">
+    <div class="w3-section">
+    {% for p in portfolio_pages_list %}
+        <botton class="w3-button w3-theme-d2 w3-opacity-min w3-round-xlarge w3-text-white">
+            {{p}}
+        </botton>
+    {% endfor %}
+    </div>
+</div>
 
 <div id="modal01" class="w3-modal" style="padding-top: 20px;" onclick="this.style.display='none'">
   

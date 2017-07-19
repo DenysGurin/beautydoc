@@ -13,7 +13,7 @@ class Client(models.Model):
     tel = models.CharField(max_length=30, default="", blank = True)
     email = models.EmailField(default="", blank = True)
     registration = models.DateTimeField(auto_now_add=True, blank = True)
-    birthday = models.DateField(default="", blank = True, null=True)
+    birthday = models.DateField(blank = True, null=True)
     position = models.CharField(max_length=100, default="", blank = True)
     live_in = models.CharField(max_length=100, default="", blank = True)
     # services = models.ManyToManyField(DetailedService, through='ClientServiceLinker', related_name = 'client_service', blank=True)##del

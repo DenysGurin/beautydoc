@@ -1,12 +1,12 @@
 from django.conf.urls import url
-
+from django.contrib.auth.views import logout
 from . import views
 
 app_name = 'dgcrm'
 urlpatterns = [
     url(r'^crm/$', views.CrmMain.as_view(), name='crm_main'),
     url(r'^crm/login/$', views.Login.as_view(), name='login'),
-    url(r'^crm/logout/$', views.Login.as_view(), name='logout'),
+    url(r'^crm/logout/$', logout, {'next_page': '/crm/login/'}, name='logout'),
     url(r'^crm/feadback/(?P<feadback_id>[0-9]+)/$', views.DetailedFeadback.as_view(), name='detailed_feadback'),
     url(r'^crm/feadback/feadback_bar/$', views.feadbackBar, name='feadback_bar'),
     url(r'^crm/create_task/$', views.CreateTask.as_view(), name='create_task'),

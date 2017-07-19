@@ -60,6 +60,8 @@ class Main(View):
         paginator = Paginator(some_list, num_items) 
         request = getattr(request, request.method)
         page = request.get('page')
+        pages_list = [p for p in paginator.page_range]
+        print(pages_list)
         try:
             pags = paginator.page(page)
         except PageNotAnInteger:
@@ -68,10 +70,10 @@ class Main(View):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             pags = paginator.page(paginator.num_items)
-        return pags
+        return pags, pages_list
 
     def get(self, request):
-        self.context['portfolio_pags'] = Main.make_pagination(self, request, self.context["portfolio"], self.num_photo)
+        self.context['portfolio_pags'], self.context['portfolio_pages_list'] = Main.make_pagination(self, request, self.context["portfolio"], self.num_photo)
         self.context['feadback_form'] = FeadbackForm()
         self.context['review_form'] = ReviewForm()
         
@@ -115,9 +117,9 @@ class Main(View):
             pass
 
         if request.is_ajax():
-            portfolio_pags = Main.make_pagination(self, request, self.context["portfolio"], self.num_photo)
+            portfolio_pags, portfolio_pages_list = Main.make_pagination(self, request, self.context["portfolio"], self.num_photo)
 
-            return render(request, "portfolio.html", {"portfolio_pags": portfolio_pags})
+            return render(request, "portfolio.html", {"portfolio_pags": portfolio_pags, "portfolio_pages_list": portfolio_pages_list})
             
             # return render_to_response("portfolio.html", {"portfolio_pags": portfolio_pags})
 
@@ -160,7 +162,8 @@ class Price(View):
         service_id = request.GET.get("service")
         self.context['services'] = Service.objects.filter(service_category=category_id)
         Price.serv_size(self, self.context['services'], service_id)
-        self.context['category_id'] = int(category_id)
+        if category_id:
+            self.context['category_id'] = int(category_id)
 
         if self.context['services'].count() > 0:
             if service_id == None:

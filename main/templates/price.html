@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 
-<div class="main" >
+<div class="main w3-conteiner" style="height:90vh">
     <div class="w3-row" id="service_categories_block" category_id="{{ category_id }}">
         {% for category in service_categories %}
             <div class="w3-conteiner">
@@ -19,15 +19,16 @@
             </div>
         {% endfor %}
     </div>
+    <div class="w3-row" >
+        {% include 'services_block.html' %}
+    </div>
+
+    <div class="w3-content" style="min-height: 450px">
+        {% include 'detailed_services_block.html' %}
+    </div>
 </div>
 
-<div class="main" >
-    {% include 'services_block.html' %}
-</div>
 
-<div class="main" style="min-height: 450px">
-    {% include 'detailed_services_block.html' %}
-</div>
 
 
 <script>

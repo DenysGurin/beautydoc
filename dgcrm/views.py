@@ -13,12 +13,14 @@ from django.views import View
 from django.views.generic.detail import DetailView
 from django.conf import settings
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin 
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 
@@ -437,8 +439,9 @@ class Login(View):
         return redirect('/crm/login/')
 
 
-class CrmMain(View):
-
+class CrmMain(LoginRequiredMixin, View):
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     @classmethod
     def addClientToEvent(self):
         clients = Client.objects.all()
@@ -526,8 +529,9 @@ class CrmMain(View):
         return render(request, "feadback_list_ajax.html", context)
 
 
-class DetailedFeadback(View):
-
+class DetailedFeadback(LoginRequiredMixin, View):
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     @classmethod
     def getModelInstanceData(cls, instance):
         data = {}
@@ -569,7 +573,9 @@ class DetailedFeadback(View):
             return redirect('/crm/')
 
 
-class DetailedEvent(View):
+class DetailedEvent(LoginRequiredMixin, View):
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     @staticmethod
     def updateModelInstanceData(model_inst, data_dict):
         for key in data_dict.keys():
@@ -667,8 +673,9 @@ class DetailedEvent(View):
             
         return redirect("/crm/event/%s"%event_id)
 
-class DetailedClient(View):
-
+class DetailedClient(LoginRequiredMixin, View):
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     def get(self, request, client_id):
         client = get_object_or_404(Client, pk=client_id)
         event_list = Event.objects.filter(client=client).order_by("-date_time")
@@ -677,7 +684,7 @@ class DetailedClient(View):
         # print((timezone.now()))
         default_data = client
 
-        client_form = ClientForm(default_data)
+        client_form = ClientForm(initial=default_data.__dict__)
         detailed_event_form = DetailedEventForm(initial={})
         price_form = PriceForm(initial={})
         result_form = ResultForm(initial={#'client': event.client,
@@ -699,8 +706,9 @@ class DetailedClient(View):
         return render(request, "detailed_client.html", context)
 
 
-class CreateTask(View):
-
+class CreateTask(LoginRequiredMixin, View):
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     def get(self, request):        
 
         task_form = TaskForm()#initial={'date_time': datetime, 'duration': duration})
@@ -719,8 +727,9 @@ class CreateTask(View):
 
         return HttpResponse(task_form.is_valid())
 
-class CreateEvent(View):
-
+class CreateEvent(LoginRequiredMixin, View):
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     def get(self, request):        
         # feadback = get_object_or_404(Feadback, pk=feadback_id)
         datetime = request.GET.get("datetime")
@@ -771,14 +780,17 @@ class CreateEvent(View):
 
 
 class TransferEvent(CrmMain):
-
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     def get(self, request, event_id):
         context = {"event_id": event_id}
         week_periods = Week(event_list=EventList.eventsOnweek())
         context["week_periods"] = week_periods
         return render(request, "transfer_event_calendar.html", context)
 
-class DeleteEvent(View):
+class DeleteEvent(LoginRequiredMixin, View):
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     def get(self, request, event_id):
         event = get_object_or_404(Event, pk=event_id)
         context = {"event": event}
@@ -805,7 +817,9 @@ class DeleteEvent(View):
         return redirect('/crm/')
 
 
-class DeleteResult(View):
+class DeleteResult(LoginRequiredMixin, View):
+    login_url = '/crm/login/'
+    redirect_field_name = '/crm/login/'
     def get(self, request, event_id, result_id):
         result = get_object_or_404(Result, pk=result_id)
         context = {"result": result}
@@ -829,7 +843,7 @@ def searchFeadback(request):
     pass
 
 def feadbackBar(request):
-
+    
     if request.method== "POST" and request.is_ajax():
         context = {}
         if request.POST.get("filter_type") == "all":
