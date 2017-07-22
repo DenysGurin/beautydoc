@@ -4,31 +4,33 @@
 {% load static %}
 
 {% if feadback_list and periods and client_list %}
-    <div class="w3-main w3-padding-24 w3-content" style="max-width:90%">
-        <div class="w3-row-padding">
-            <div class="w3-col s3 w3-animate-left">
+    <div class="w3-main w3-padding-32 w3-conteiner" style="height:90vh;">
+        <div class="w3-content w3-row-padding" style="max-width:90%">
+            <div class="w3-col s6 w3-animate-left">
                 <div class="w3-card-4">
                     {% include 'feadback.html' %}
                 </div>
+                <br>
+                <div class="w3-card-4">
+                    {% include 'task.html' %}
+                </div>
             </div>
         
-            <div class="w3-col s5 w3-animate-opacity">
+            <div class="w3-col s6 w3-animate-opacity">
                 <div class="w3-card-4">
                     {% include 'event.html' %}
                 </div>      
             </div>
 
-            <div class="w3-col s4 w3-animate-right">
-                <div class="w3-card-4">
-                    {% include 'task.html' %}
-                </div>
-            </div>
+            <!--<div class="w3-col s4 w3-animate-right">-->
+                
+            <!--</div>-->
         </div>  
     </div>
 
 {% endif %}
 
-<div class="w3-conteiner" id="calendar">
+<div class="w3-main w3-padding-32 w3-conteiner" id="calendar" style="height:90vh;">
     <br><br><br>
     <div class="w3-cell-row">
         <div class="w3-cell w3-display-container" style="width:10%">
@@ -45,7 +47,7 @@
 
 <br><br>
 
-<div class="w3-conteiner" id="clients">
+<div class="w3-conteiner" id="clients" style="height:90vh;">
     <br><br><br>
     <div class="w3-content w3-card-4 w3-animate-opacity" id="week_calendar" style="max-width:80%">
         {% include 'client.html' %}

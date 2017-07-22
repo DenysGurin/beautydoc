@@ -37,6 +37,7 @@ from .Day import Day
 def dayPeriods(hour=9, minute=0, second=0):
     start_day = datetime.time(hour, minute, second)
 
+
 class QueryByPeriod(object):
 
     @classmethod
@@ -180,6 +181,7 @@ class EventPeriod(object):
     def __str__(self):
         return "%s %s"%(str(self.event_start), str(self.event_end))
 
+
 class Period(object):
 
     def __init__(self, start_period, length_period = timedelta(minutes=30)):
@@ -254,6 +256,7 @@ class Period(object):
             self.event = event_obj
             return True
         return False
+
 
 class Day(object):
 
@@ -373,6 +376,7 @@ class WeekDay(Day):
     def __iter__(self):
         return iter(self.sorted_time_periods)
 
+
 class Week(object):
 
     def weekDays(self):
@@ -412,6 +416,7 @@ class Week(object):
 
     def __iter__(self):
         return iter(self.week_days)
+
 
 class Login(View):
     
@@ -673,6 +678,7 @@ class DetailedEvent(LoginRequiredMixin, View):
             
         return redirect("/crm/event/%s"%event_id)
 
+
 class DetailedClient(LoginRequiredMixin, View):
     login_url = '/crm/login/'
     redirect_field_name = '/crm/login/'
@@ -726,6 +732,7 @@ class CreateTask(LoginRequiredMixin, View):
             return redirect("/crm")
 
         return HttpResponse(task_form.is_valid())
+
 
 class CreateEvent(LoginRequiredMixin, View):
     login_url = '/crm/login/'
@@ -788,6 +795,7 @@ class TransferEvent(CrmMain):
         context["week_periods"] = week_periods
         return render(request, "transfer_event_calendar.html", context)
 
+
 class DeleteEvent(LoginRequiredMixin, View):
     login_url = '/crm/login/'
     redirect_field_name = '/crm/login/'
@@ -832,6 +840,7 @@ class DeleteResult(LoginRequiredMixin, View):
         
         return redirect('/crm/event/%s/'%event_id)
 
+
 def transferEvent(request, event_id):
     datetime = request.GET.get("datetime")
     event = get_object_or_404(Event, pk=event_id)
@@ -839,8 +848,10 @@ def transferEvent(request, event_id):
     obj, created = Event.objects.update_or_create(pk=event_id, defaults=data)
     return redirect('/crm/')
 
+
 def searchFeadback(request):
     pass
+
 
 def feadbackBar(request):
     
@@ -862,6 +873,7 @@ def feadbackBar(request):
             feadback_list = Feadback.objects.filter(has_event=True).order_by('-id')
             context["feadback_list"] = feadback_list
             return render(request, "feadback_list_ajax.html", context)
+
 
 def changeWeekCalendar(request):
     context = {}

@@ -23,8 +23,9 @@ class EventForm(forms.ModelForm):
         #                     "Email": "Email",
         #                     }
         
-        # notes = self.fields.get("notes")
-        # notes.widget = forms.Textarea(attrs={'placeholder': "Заметки", 'class': 'w3-input'})
+        # date_time = self.fields.get("date_time")
+        # date_time.widget =widgets.AdminSplitDateTime()
+
         # notes.label = "Заметки"
 
             # else:
