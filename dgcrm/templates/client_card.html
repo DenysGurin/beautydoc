@@ -163,9 +163,6 @@ window.setTimeout(offsetAnchor, 1); // The delay of 1 is arbitrary and may not a
     
         <div class="w3-container w3-white w3-margin-bottom">
         <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-user-md fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>История записи</h2>
-        <!-- <ul class="w3-ul" id="feadback_list" style="height: 64vh; overflow: auto;">
-            {% include 'feadback_list_ajax.html' %}
-        </ul> -->
         <ul class="w3-ul">
             {% if event_list %}
                 {% for event in event_list %}
@@ -376,7 +373,7 @@ window.setTimeout(offsetAnchor, 1); // The delay of 1 is arbitrary and may not a
                                         <input type="hidden" name="event_id" value="{{event.id}}">                                        
                                     </div>
                                     <div class="w3-container w3-padding">
-                                        <span class="w3-right"><button class="w3-button w3-hover-red w3-round-xlarge" type="submit" name="submit" value="add_pay">Изменить</button></span>
+                                        <span class="w3-right"><button class="w3-button w3-hover-red w3-round-xlarge" type="submit" name="submit" value="edit_price">Изменить</button></span>
                                     </div>                                   
                                 </form>
                                 </div>                               

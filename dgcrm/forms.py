@@ -3,7 +3,19 @@ from django.forms import inlineformset_factory
 from .models import Event, Result, Feadback, Pay, Task, Price, Client
 # from main.models import 
 from django.contrib.admin import widgets
+from django.contrib.auth.forms import AuthenticationForm
 
+class MyAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(MyAuthenticationForm, self).__init__(*args, **kwargs)
+
+        self.base_fields['username'].label = 'Имя'
+        self.base_fields['username'].widget.attrs['class'] = 'w3-input w3-border'
+        self.base_fields['username'].widget.attrs['type'] = 'text'
+
+        self.base_fields['password'].label = 'Пароль'
+        self.base_fields['password'].widget.attrs['class'] = 'w3-input w3-border'
+        self.base_fields['password'].widget.attrs['type'] = 'password'
 
 
 class TaskForm(forms.ModelForm): 
@@ -45,15 +57,16 @@ class EventForm(forms.ModelForm):
 class DetailedEventForm(forms.ModelForm): 
     def __init__(self, *args, **kwargs):
         super(DetailedEventForm, self).__init__(*args, **kwargs)
-        # STATUS_CHOICES = (
-        #     ("in_progress", 'ожидается'),
-        #     ("successful", 'сделано'),
-        #     ("failed", 'отменился'),
-        #     ("contact", 'связаться'),
-        # )
+        STATUS_CHOICES = (
+            ("in_progress", 'ожидается'),
+            ("successful", 'сделано'),
+            ("failed", 'отменился'),
+            ("contact", 'связаться'),
+        )
         status = self.fields.get("status")
         status.widget = forms.Select(attrs={'class': 'w3-select w3-bar-item w3-round-xlarge w3-white w3-hover-red w3-border w3-border-white', 'onchange': "this.form.submit()"})
-        
+        status.choices = STATUS_CHOICES
+        status.initial = ("Изменить статус","Изменить статус")
         status.label = "Статус"
 
     class Meta:
@@ -186,15 +199,17 @@ class ClientForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     
-    search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "поиск",
+    search = forms.CharField(widget=forms.TextInput(attrs={'class': 'w3-input',
+                                                           'placeholder': "поиск",
                                                            'style': "border:none; ",
                                                            'autofocus': "none"}))
 
 class SearchFeadbackForm(forms.Form):
     
-    search = forms.CharField(widget=forms.TextInput(attrs={'id': "search_feadback",
+    search = forms.CharField(widget=forms.TextInput(attrs={'class': 'w3-input w3-small w3-padding-small',
+                                                           'id': "search_feadback",
                                                            'placeholder': "поиск",
-                                                           'style': "border:none; ",
+                                                           'style': "border:none; outline: none",
                                                            'autofocus': "none"}))
 
 

@@ -58,6 +58,7 @@ class Pay(models.Model):
     profit = models.IntegerField(blank=True, null=True)
     date_time = models.DateTimeField()
 
+
 class Price(models.Model):
     CURRENCY_CHOICES = (
         ("UAH", 'UAH'),
@@ -110,16 +111,19 @@ class Event(models.Model):
     def __str__(self):
         return "%s %s -> %s "%(self.client, self.detailed_service, self.date_time)
 
+
 class Note(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE) 
     note = models.TextField()
     created = models.DateTimeField(auto_now_add=True, blank = True)
+
 
 class Task(models.Model):
     task = models.TextField()
     date = models.DateField()
     time = models.TimeField(blank=True, null=True)
     done = models.BooleanField(default=False)
+
 
 class CanceledEvent(models.Model):
     feadback = models.ForeignKey(Feadback, on_delete=models.CASCADE, blank=True, null=True)

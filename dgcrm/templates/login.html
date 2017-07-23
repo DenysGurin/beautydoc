@@ -1,12 +1,52 @@
-{% extends "base_crm.html" %}
 
-{% block content %}
+<!DOCTYPE html>
 {% load static %}
+<html>
+<title>Светлана Владимировна - Доктор дермато-косметолог</title>
 
-<form method="post">{% csrf_token %}
-  {{ login_form }}
-  <input type="submit" name="submit" value="login">
-</form>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="{% static 'main/img/lips_icon.png' %}" type="image/x-icon">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Jura|Open+Sans+Condensed:300" rel="stylesheet">
 
-{% endblock %}
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/w3.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/w3-colors-food.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/w3-theme-red.css' %}">
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/style.css' %}">
+
+<script src="{% static 'main/libs/jquery-1.11.2.min.js' %}"></script>
+
+
+<!-- <link rel="stylesheet" type="text/css" href="/jquery."> -->
+<body>
+    <div class="w3-content w3-padding-64">
+        <div class="w3-card-4">
+
+            <div class="w3-container w3-red">
+                <h2>CRM cистема</h2>
+            </div>
+
+            <form class="w3-container w3-padding-32" method="post">{% csrf_token %}
+
+                {{ login_form.username.label }}
+                {{ login_form.username }}
+                <br>
+
+                {{ login_form.password.label }}
+                {{ login_form.password }}
+                <br>
+
+                <button class="w3-btn w3-red" type="submit" name="submit" value="login">Вход</button>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
+
 

@@ -4,8 +4,8 @@ import json
 import operator
 
 from itertools import chain
-from datetime import datetime, timedelta, timezone, date, time
-
+from datetime import datetime, timedelta, date, time
+import calendar
 from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
@@ -17,15 +17,14 @@ from django.utils.decorators import method_decorator
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 
 
-from .forms import EventForm, ResultForm, PayForm, DetailedEventForm, SearchForm, FeadbackForm, SearchFeadbackForm, TaskForm, PriceForm, ClientForm
+from .forms import MyAuthenticationForm, EventForm, ResultForm, PayForm, DetailedEventForm, SearchForm, FeadbackForm, SearchFeadbackForm, TaskForm, PriceForm, ClientForm
 from main.models import ServiceCategory, Service, DetailedService
 from .models import Event, Client, Feadback, Task, Result, CanceledEvent, Pay, Price
 
@@ -35,17 +34,52 @@ from .Day import Day
 
 
 def dayPeriods(hour=9, minute=0, second=0):
+
     start_day = datetime.time(hour, minute, second)
 
+def serchByNameTel(search_feadback):
+
+
+    to_find_fn_and_ln = re.match(u"(?P<first_name>[\u0400-\u0500]+) (?P<last_name>[\u0400-\u0500]+)", search_feadback,
+                                 re.U)
+    # print(to_find_fn_and_ln)
+
+    to_find_fn_or_ln = re.match(u"^(?P<some_name>[\u0400-\u0500]+)$|^([\u0400-\u0500]+[\s]+)$", search_feadback, re.U)
+    # print(to_find_fn_or_ln)
+
+    to_find_tel = re.match(r"^(?:([+]\d{1,2}))?[\s.-]?(\d{3})?[\s.-]?(\d{3})?[\s.-]?(\d{2})?[\s.-]?(\d{2})$",
+                           search_feadback, re.U)
+    # print(to_find_tel)
+
+    if to_find_fn_and_ln:
+        # print(to_find_fn_and_ln.group('first_name'))
+        q_first = Q(first=to_find_fn_and_ln.group('first_name'))
+        q_last = Q(last=to_find_fn_and_ln.group('last_name'))
+        feadback_list = Feadback.objects.filter(q_first, q_last).order_by('id')
+    elif to_find_fn_or_ln:
+        some_name = re.findall(u'[\u0400-\u0500]+', to_find_fn_or_ln.group(0), re.U)[0]
+        # print(some_name)
+        q_some1 = Q(first__contains=some_name)
+        q_some2 = Q(last__contains=some_name)
+
+        feadback_list = Feadback.objects.filter(q_some1 | q_some2).order_by('id')
+    elif to_find_tel:
+        q_tel = Q(tel=to_find_tel.group())
+        feadback_list = Feadback.objects.filter(q_tel).order_by('id')
+    else:
+        feadback_list = [None]
+
+    return feadback_list
 
 class QueryByPeriod(object):
 
+
     @classmethod
-    def byDay(cls, min_datetime):
-        if not min_datetime:
-            min_date = datetime.date(timezone.now())
+    def byDay(cls, min_datetime=None):
+        if min_datetime:
+            min_date = min_datetime.date()
         else:
-            min_date = min_date.date()
+            min_date = datetime.date(timezone.now())
         max_date = min_date + timedelta(days=1)
         q_object = Q()
         q_object &= Q(date__gte=min_date)
@@ -53,11 +87,13 @@ class QueryByPeriod(object):
         return q_object
 
     @classmethod
-    def byWeek(cls, min_datetime):
-        if not min_datetime:
-            min_date = datetime.date(datetime.now(timezone.utc)-timedelta(days=datetime.weekday(datetime.now(timezone.utc))))
+    def byWeek(cls, min_datetime=None):
+        if min_datetime:
+            min_date = datetime.date(min_datetime - timedelta(days=datetime.weekday(min_datetime)))
         else:
-            min_date = datetime.date(min_date-timedelta(days=datetime.weekday(min_datetime)))
+            min_date = datetime.date(
+                datetime.now(timezone.utc) - timedelta(days=datetime.weekday(datetime.now(timezone.utc))))
+
         max_date = min_date+timedelta(days=7)
         q_object = Q()
         q_object &= Q(date__gt=min_date)
@@ -65,13 +101,13 @@ class QueryByPeriod(object):
         return q_object
 
     @classmethod
-    def byMonth(cls, min_datetime):
-        if not min_datetime:
-            min_date = datetime.date(datetime.now(timezone.utc)-timedelta(days=datetime.now(timezone.utc).day-1))
+    def byMonth(cls, min_datetime=None):
+        if min_datetime:
+            min_date = datetime.date(min_datetime - timedelta(days=min_datetime.day - 1))
         else:
-           min_date = datetime.date(min_date-timedelta(days=min_date.day-1))
-        
-        max_datetime = date(int(min_date.year), int(min_date.month)+1, 1)
+            min_date = datetime.date(datetime.now(timezone.utc) - timedelta(days=datetime.now(timezone.utc).day - 1))
+
+        max_date = date(int(min_date.year), int(min_date.month)+1, 1)
         q_object = Q()
         q_object &= Q(date__gte=min_date)
         q_object &= Q(date__lt=max_date)
@@ -91,7 +127,7 @@ class QueryByPeriod(object):
         query = query_obj.filter(QueryByPeriod.byWeek(min_datetime))
         if query.count() < 1:
             return None
-        return events.order_by('date')
+        return query.order_by('date')
 
     @staticmethod
     def queryOnmonth(query_obj, min_datetime = None):
@@ -168,6 +204,7 @@ class EventList(object):
 
 class EventPeriod(object):
 
+
     def isInPast(self):
         if self.event_start < timezone.now():
             return True
@@ -183,6 +220,7 @@ class EventPeriod(object):
 
 
 class Period(object):
+
 
     def __init__(self, start_period, length_period = timedelta(minutes=30)):
         self.period_datetime = str(start_period)
@@ -251,7 +289,10 @@ class Period(object):
         eve_en_lte_per_en = event_period_obj.event_end <= self.end_period
         eve_en_gt_per_en = event_period_obj.event_end > self.end_period
         # if (eve_st_gte_per_st and eve_st_lt_per_en) or (eve_en_gte_per_st and eve_en_lt_per_en):
-        if (eve_st_gte_per_st and eve_st_lt_per_en) or (eve_st_lt_per_st and eve_en_gt_per_en) or(eve_en_gt_per_en and eve_en_lte_per_en) or (eve_en_gt_per_st and eve_en_lte_per_en):
+        if (eve_st_gte_per_st and eve_st_lt_per_en) or \
+                (eve_st_lt_per_st and eve_en_gt_per_en) or \
+                (eve_en_gt_per_en and eve_en_lte_per_en) or \
+                (eve_en_gt_per_st and eve_en_lte_per_en):
             # self.contain_event = True
             self.event = event_obj
             return True
@@ -259,6 +300,7 @@ class Period(object):
 
 
 class Day(object):
+
 
     def timePeriods(self):
         period = Period(self.start_day)
@@ -421,13 +463,13 @@ class Week(object):
 class Login(View):
     
     def get(self, request):
-        login_form = AuthenticationForm()
+        login_form = MyAuthenticationForm()
         return render(request, "login.html", {"login_form": login_form})
 
     def post(self, request):
         if request.POST.get("submit") == "login":
 
-            login_form = AuthenticationForm(None, data=request.POST)
+            login_form = MyAuthenticationForm(None, data=request.POST)
             # return HttpResponse(login_form)
             if login_form.is_valid():
                 # return HttpResponse(123)
@@ -444,33 +486,43 @@ class Login(View):
         return redirect('/crm/login/')
 
 
-class CrmMain(LoginRequiredMixin, View):
+class LoginRequiredView(LoginRequiredMixin, View):
+
+
     login_url = '/crm/login/'
     redirect_field_name = '/crm/login/'
-    @classmethod
-    def addClientToEvent(self):
-        clients = Client.objects.all()
-        events = Event.objects.all()
-        for event in events:
-            if not event.client:
-                tel = event.feadback.tel
-                for client in clients:
-                    if client.tel == tel:
-                        event.client = client
-                        event.save()
+
+
+class CrmMain(LoginRequiredView):
+
+
+    # @classmethod
+    # def addClientToEvent(self):
+    #     clients = Client.objects.all()
+    #     events = Event.objects.all()
+    #     for event in events:
+    #         if not event.client:
+    #             tel = event.feadback.tel
+    #             for client in clients:
+    #                 if client.tel == tel:
+    #                     event.client = client
+    #                     event.save()
 
 
     def get(self, request):
+
+
         if request.user.is_authenticated:
             # CrmMain.addClientToEvent(self)
             context = {"user": request.user}
             serch_form = SearchForm()#initial={'search': '%sпоиск'%search_icon})
             serch_feadback_form = SearchFeadbackForm()
-            feadback_list_inwork = Feadback.objects.filter(has_event=False).order_by('id')
-            feadback_list_done = Feadback.objects.filter(has_event=True).order_by('-id')
+            feadback_list = Feadback.objects.all()
+            feadback_list_inwork = feadback_list.filter(has_event=False).order_by('id')
+            feadback_list_done = feadback_list.filter(has_event=True).order_by('-id')
             feadback_list = list(feadback_list_inwork)+list(feadback_list_done)
 
-            print(Task.objects.filter(done=False))
+            # print(Task.objects.filter(done=False))
             task_list_inwork = QueryByPeriod.queryOnday(Task.objects.filter(done=False))
             # task_list_done = QueryByPeriod.queryOnday(Task.objects.filter(done=True))
             if task_list_inwork != None:# or task_list_done != None:
@@ -478,19 +530,14 @@ class CrmMain(LoginRequiredMixin, View):
                 context["task_list"] = task_list
 
             periods = Day(event_list=EventList.eventsOnday())
-            week_periods = Week(event_list=EventList.eventsOnweek())
-            client_list = Client.objects.all()
 
             # return HttpResponse(EventList.eventsOnday(self))
             context["serch_form"] = serch_form
             context["serch_feadback_form"] = serch_feadback_form
             context["feadback_list"] = feadback_list
-            
-            context["client_list"] = client_list
+
             context["periods"] = periods
-            context["week_periods"] = week_periods
-            context["main_page"] = True
-            return render(request, "crm.html", context)
+            return render(request, "crm_main.html", context)
         else:
             # return HttpResponse("CRM not login")
             return redirect('/crm/login/')
@@ -500,43 +547,284 @@ class CrmMain(LoginRequiredMixin, View):
         search_feadback = u"%s"%str(request.POST.get("search_feadback"))
         # print(search_feadback)
         serch_all = re.findall(u'[\u0400-\u0500]+', search_feadback, re.U)
-        print(serch_all)
+        # print(serch_all)
        
         if request.is_ajax() and search_feadback:
-            to_find_fn_and_ln = re.match(u"(?P<first_name>[\u0400-\u0500]+) (?P<last_name>[\u0400-\u0500]+)", search_feadback, re.U)
-            # print(to_find_fn_and_ln)
 
-            to_find_fn_or_ln = re.match(u"^(?P<some_name>[\u0400-\u0500]+)$|^([\u0400-\u0500]+[\s]+)$", search_feadback, re.U)
-            # print(to_find_fn_or_ln)
-
-            to_find_tel = re.match(r"^(?:([+]\d{1,2}))?[\s.-]?(\d{3})?[\s.-]?(\d{3})?[\s.-]?(\d{2})?[\s.-]?(\d{2})$", search_feadback, re.U)
-            # print(to_find_tel)
-
-            if to_find_fn_and_ln:
-                # print(to_find_fn_and_ln.group('first_name'))
-                q_first = Q(first=to_find_fn_and_ln.group('first_name'))
-                q_last = Q(last=to_find_fn_and_ln.group('last_name'))
-                feadback_list = Feadback.objects.filter(q_first, q_last).order_by('id')
-            elif to_find_fn_or_ln:
-                some_name = re.findall(u'[\u0400-\u0500]+', to_find_fn_or_ln.group(0), re.U)[0]
-                print(some_name)
-                q_some1 = Q(first__contains=some_name)
-                q_some2 = Q(last__contains=some_name)
-                    
-                feadback_list = Feadback.objects.filter(q_some1 | q_some2).order_by('id')
-            elif to_find_tel:
-                q_tel = Q(tel=to_find_tel.group())
-                feadback_list = Feadback.objects.filter(q_tel).order_by('id')
-            else:
-                feadback_list = [None]
-            context["feadback_list"] = feadback_list
+            context["feadback_list"] = serchByNameTel(search_feadback)
             
         return render(request, "feadback_list_ajax.html", context)
 
 
-class DetailedFeadback(LoginRequiredMixin, View):
-    login_url = '/crm/login/'
-    redirect_field_name = '/crm/login/'
+class CrmCalendar(LoginRequiredView):
+
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            context = {"user": request.user}
+
+            periods = Day(event_list=EventList.eventsOnday())
+            week_periods = Week(event_list=EventList.eventsOnweek())
+
+            # return HttpResponse(EventList.eventsOnday(self))
+
+            context["periods"] = periods
+            context["week_periods"] = week_periods
+            return render(request, "crm_calendar.html", context)
+        else:
+            # return HttpResponse("CRM not login")
+            return redirect('/crm/login/')
+
+    def post(self, request):
+        pass
+
+
+class CrmClients(LoginRequiredView):
+
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            context = {"user": request.user}
+
+            client_list = Client.objects.all()
+
+            context["client_list"] = client_list
+
+            return render(request, "crm_clients.html", context)
+        else:
+            # return HttpResponse("CRM not login")
+            return redirect('/crm/login/')
+
+    def post(self, request):
+        pass
+
+
+class QByPeriod(object):
+
+
+    @classmethod
+    def DaysInMonths(cls, from_year_month, to_year_month):
+        ### from_year_month == (year, month)
+        ### to_year_month == (year, month)
+
+        days_sum = 0
+        if from_year_month[0] < to_year_month[0] or \
+                (from_year_month[0] == to_year_month[0] and from_year_month[1] < to_year_month[1]):
+            for year in range(from_year_month[0], to_year_month[0]+1):
+                print(year)
+                if year == to_year_month[0]:
+                    print(range(from_year_month[1], to_year_month[1]+1))
+                    for month in range(from_year_month[1], to_year_month[1]+1):
+                        print(month)
+                        days_sum += calendar.monthrange(year, month)[1]
+                else:
+                    print(range(from_year_month[1], 13))
+                    for month in range(from_year_month[1], 13):
+                        days_sum += calendar.monthrange(year, month)[1]
+                    from_year_month[1] = 1
+            print(days_sum)
+            return days_sum
+        else:
+            raise "from_month has to be less than to_month"
+
+
+    @classmethod
+    def byMonth(cls, field_name, min_datetime=None):
+
+
+        current = datetime.now(timezone.utc)
+
+        if min_datetime:
+            min_date = datetime.date(min_datetime - timedelta(days=min_datetime.day - 1))
+        else:
+            min_date = datetime.date(current - timedelta(days=current.day - 1))
+
+        max_date = date(int(min_date.year), int(min_date.month) + 1, 1)
+        print(min_date, max_date)
+        filter__gte = field_name + '__' + 'gte'
+        filter__lt = field_name + '__' + 'lt'
+
+        q_object = Q()
+        q_object &= Q(**{filter__gte: min_date})
+        q_object &= Q(**{filter__lt: max_date})
+
+        return q_object
+
+
+    @classmethod
+    def byThreeMonths(cls, field_name, min_datetime=None):
+        current = datetime.now(timezone.utc)
+        to_month = (current.year, current.month-1)
+
+        if (current.month - 2) > 0:
+            from_month = (current.year, current.month - 2)
+        else:
+            from_month = (current.year-1, 12 - (current.month - 2))
+
+        days = QByPeriod.DaysInMonths(from_month,to_month)
+
+        if min_datetime:
+            min_date = datetime.date(min_datetime - timedelta(days=min_datetime.day - 1 + days))
+        else:
+            min_date = datetime.date(
+                current - timedelta(days=current.day - 1 + days))
+
+        max_date = date(int(min_date.year), int(min_date.month) + 3, 1)
+
+        filter__gte = field_name + '__' + 'gte'
+        filter__lt = field_name + '__' + 'lt'
+
+        q_object = Q()
+        q_object &= Q(**{filter__gte: min_date})
+        q_object &= Q(**{filter__lt: max_date})
+
+        return q_object
+
+
+    @classmethod
+    def byTwelveMonths(cls, field_name, min_datetime=None):
+        current = datetime.now(timezone.utc)
+        to_month = [current.year, current.month - 1]
+
+        if (current.month - 12) > 0:
+            from_month = [current.year, current.month - 12]
+        else:
+            from_month = [current.year - 1, 12 + (current.month - 12)]
+
+        print(from_month, to_month)
+        days = QByPeriod.DaysInMonths(from_month, to_month)
+
+        if min_datetime:
+            min_date = datetime.date(min_datetime - timedelta(days=min_datetime.day - 1 + days))
+        else:
+            min_date = datetime.date(
+                current - timedelta(days=current.day - 1 + days))
+
+        max_date = min_date + timedelta(days=days+calendar.monthrange(current.year, current.month)[1])
+
+        filter__gte = field_name + '__' + 'gte'
+        filter__lt = field_name + '__' + 'lt'
+
+        q_object = Q()
+        q_object &= Q(**{filter__gte: min_date})
+        q_object &= Q(**{filter__lt: max_date})
+
+        return q_object
+
+
+class QuerySetByPeriod(QByPeriod):
+
+
+    def __init__(self, Query_set, field_name, min_datetime=None):
+        self.Query_set = Query_set
+        self.field_name = field_name
+        self.min_datetime = min_datetime
+
+
+
+    def getByMounth(self):
+        return self.Query_set.filter(self.byMonth(self.field_name, self.min_datetime))
+
+
+    def getThreeMonths(self):
+        return self.Query_set.filter(self.byThreeMonths(self.field_name, self.min_datetime))
+
+
+    def getByTwelveMonths(self):
+        return self.Query_set.filter(self.byTwelveMonths(self.field_name, self.min_datetime))
+
+    def __str__(self):
+        return str(self.Query_set)
+
+
+class DataSets(object):
+
+    @staticmethod
+    def RatingByEventFrequency(query_set):
+        from operator import itemgetter
+
+        services_raiting = {}
+        services_list = []
+        for event in query_set:
+            if event.detailed_service in services_list:
+                services_raiting[event.detailed_service] += 1
+            else:
+                services_list.append(event.detailed_service)
+                services_raiting[event.detailed_service] = 0
+
+        return sorted(services_raiting.items(), key=itemgetter(1), reverse=True)
+
+    @staticmethod
+    def RatingByDaysLoad(query_set):
+
+        services_raiting = {}
+        for day in range(1,8):
+            services_raiting[day] = []
+
+        for event in query_set:
+            day = event.date_time.isoweekday()
+            services_raiting[day].append(event.detailed_service)
+
+        return sorted(services_raiting.items(), key=lambda item: len(item[1]), reverse=True)
+
+
+class CrmStatistic(LoginRequiredView):
+
+
+    def get(self, request):
+
+
+        context = {}
+        clients = QuerySetByPeriod(Client.objects.all(), "registration")
+        print(clients)
+
+        events = QuerySetByPeriod(Event.objects.all(), "date_time")
+        print(clients)
+
+        new_clients_by_month = clients.getByMounth()
+        context["new_clients_by_month"] = new_clients_by_month
+        print(new_clients_by_month)
+
+        new_clients_by_three_month = clients.getThreeMonths()
+        context["new_clients_by_three_month"] = new_clients_by_three_month
+        print(new_clients_by_three_month)
+
+        new_clients_by_twelve_month = clients.getByTwelveMonths()
+        context["new_clients_by_twelve_month"] = new_clients_by_twelve_month
+        print(new_clients_by_twelve_month)
+
+        new_events_by_month = events.getByMounth()
+        context["new_events_by_month"] = new_events_by_month
+        print("#################")
+        print(new_events_by_month)
+
+        new_events_by_three_month = events.getThreeMonths()
+        context["new_events_by_three_month"] = new_events_by_three_month
+        print(new_events_by_three_month)
+
+        new_events_by_twelve_month = events.getByTwelveMonths()
+        context["new_events_by_twelve_month"] = new_events_by_twelve_month
+        print(new_events_by_twelve_month)
+
+
+        raiting_by_event_frequency_sorted = DataSets.RatingByEventFrequency(new_events_by_month)
+        context["raiting_by_event_frequency_sorted"] = raiting_by_event_frequency_sorted
+        print(raiting_by_event_frequency_sorted)
+
+        raiting_by_days_load_sorted = DataSets.RatingByDaysLoad(new_events_by_month)
+        context["raiting_by_days_load_sorted"] = raiting_by_days_load_sorted
+        print(raiting_by_days_load_sorted)
+
+        return render(request, "crm_statistic.html", context)
+
+class CrmFinance(LoginRequiredView):
+
+    pass
+
+
+class DetailedFeadback(LoginRequiredView):
+
+
     @classmethod
     def getModelInstanceData(cls, instance):
         data = {}
@@ -578,79 +866,96 @@ class DetailedFeadback(LoginRequiredMixin, View):
             return redirect('/crm/')
 
 
-class DetailedEvent(LoginRequiredMixin, View):
-    login_url = '/crm/login/'
-    redirect_field_name = '/crm/login/'
-    @staticmethod
-    def updateModelInstanceData(model_inst, data_dict):
+class ClientCard(LoginRequiredView):
+
+
+    @classmethod
+    def updateModelInstanceData(cls, model_inst, data_dict):
         for key in data_dict.keys():
             setattr(model_inst, key, data_dict[key])
             model_inst.save()
-    def get(self, request, event_id):
-        event = get_object_or_404(Event, pk=event_id)
-        event_period = EventPeriod(event)
-        client = event.client
-        event_list = Event.objects.filter(client=client).order_by("-date_time")
-        result_list = Result.objects.filter(client=client)
-        default_data = client
-        
-        client_form = ClientForm(initial=client.__dict__)
-        detailed_event_form = DetailedEventForm(initial={'status': event.status, 'initial': "Изменить статус"})
-        # print(event_period.is_in_past)
-        if event_period.is_in_past:
-            # print(dir(detailed_event_form.fields["status"]))
-            # print(detailed_event_form.fields["status"].choices)
-            detailed_event_form.fields["status"].choices = (("successful", 'сделано'),
-                                                            ("failed", 'отменился'),
-                                                            ("contact", 'связаться'))
-        else:
-            detailed_event_form.fields["status"].choices = (("in_progress", 'ожидается'),
-                                                            ("successful", 'сделано'),
-                                                            ("failed", 'отменился'),
-                                                            ("contact", 'связаться'))
 
+    @classmethod
+    def getPrice(cls, event_obj):
+        try:
+            return getattr(event_obj, "price")
+        except AttributeError:
+            return None
 
-        price_form = PriceForm()
-        result_form = ResultForm(initial={#'client': event.client,
-                                          #'detailed_service': event.detailed_service, 
-                                          'date': (event.date_time + timedelta(hours=event.duration.hour, minutes=event.duration.minute))})
-        pay_form = PayForm(initial={#'client': event.client,
-                                    #'detailed_service': event.detailed_service, 
-                                    'date_time': (event.date_time + timedelta(hours=event.duration.hour, minutes=event.duration.minute))})
+    def get(self, request, event_id=None, client_id=None):
+
+        print(event_id, client_id)
         context = {}
-        context["event_id"] = int(event_id)
-        context["event_period"] = event_period
-        context["event"] = event
+
+        if event_id and not client_id:
+
+            print("event")
+            event = get_object_or_404(Event, pk=event_id)
+            event_period = EventPeriod(event)
+            client = event.client
+            event_list = Event.objects.filter(client=client).order_by("-date_time")
+            event_price = self.getPrice(event)
+            print(event_price)
+
+            client_form = ClientForm(initial=client.__dict__)
+            price_form = PriceForm(initial=event_price.__dict__)
+            result_form = ResultForm(initial={
+                'date': (event.date_time + timedelta(hours=event.duration.hour, minutes=event.duration.minute))})
+            pay_form = PayForm(initial={
+                'date_time': (event.date_time + timedelta(hours=event.duration.hour, minutes=event.duration.minute))})
+            detailed_event_form = DetailedEventForm(initial={})
+
+            context["event_id"] = int(event_id)
+            context["event"] = event
+            context["event_period"] = event_period
+        elif client_id and not event_id:
+            print("client")
+            client = get_object_or_404(Client, pk=client_id)
+            event_list = Event.objects.filter(client=client).order_by("-date_time")
+
+            client_form = ClientForm(initial=client.__dict__)
+            price_form = PriceForm(initial={})
+            result_form = ResultForm(initial={'date': timezone.now()})
+            pay_form = PayForm(initial={'date_time': timezone.now()})
+            detailed_event_form = DetailedEventForm(initial={})
+
         context["client"] = client
         context["event_list"] = event_list
+
         context["client_form"] = client_form
-        context["detailed_event_form"] = detailed_event_form
         context["price_form"] = price_form
         context["result_form"] = result_form
         context["pay_form"] = pay_form
-        return render(request, "detailed_event.html", context)
+        context["detailed_event_form"] = detailed_event_form
 
-    def post(self, request, event_id):
+        if event_id and not client_id:
+            return render(request, "detailed_event.html", context)
+
+        elif client_id and not event_id:
+            return render(request, "detailed_client.html", context)
+
+
+    def post(self, request, event_id=None, client_id=None):
+
         result_form = ResultForm(request.POST, request.FILES)
         pay_form = PayForm(request.POST)
         detailed_event_form = DetailedEventForm(request.POST)
         client_form = ClientForm(request.POST)
+        price_form = PriceForm(request.POST)
 
         event = get_object_or_404(Event, pk=request.POST.get("event_id"))
-    
+
         if result_form.is_valid() and request.POST.get("submit") == "add_result":
-            
             result_data = result_form.cleaned_data
 
             result_data["client"] = event.client
             result_data["detailed_service"] = event.detailed_service
-            
+
             result = Result.objects.create(**result_data)
             event.results.add(result)
             # return render(request, "create_event.html", {})
 
         if pay_form.is_valid() and request.POST.get("submit") == "add_pay":
-
             pay_data = pay_form.cleaned_data
             pay_data["client"] = event.client
             pay_data["detailed_service"] = event.detailed_service
@@ -661,60 +966,32 @@ class DetailedEvent(LoginRequiredMixin, View):
 
         if client_form.is_valid() and request.POST.get("submit") == "edit_client":
             client_data = client_form.cleaned_data
-            print(client_data)
-            DetailedEvent.updateModelInstanceData(event.client, client_data)
+            # print(client_data)
+            self.updateModelInstanceData(event.client, client_data)
             # event.status = detailed_event_form.cleaned_data["status"]
             event.save()
-            
+        print(price_form.is_valid())
+        if price_form.is_valid() and request.POST.get("submit") == "edit_price":
+            price_data = price_form.cleaned_data
+            # print(price_data)
+            self.updateModelInstanceData(event.price, price_data)
+            # event.status = detailed_event_form.cleaned_data["status"]
+            event.save()
 
         if detailed_event_form.is_valid() and request.POST.get("submit") == None:
-
             detailed_event_data = detailed_event_form.cleaned_data
             event.status = detailed_event_form.cleaned_data["status"]
             # print(detailed_event_form.cleaned_data["status"])
             event.save()
-            
+
             # return render(request, "create_event.html", {})
-            
-        return redirect("/crm/event/%s"%event_id)
+
+        return redirect("/crm/event/%s" % event_id)
 
 
-class DetailedClient(LoginRequiredMixin, View):
-    login_url = '/crm/login/'
-    redirect_field_name = '/crm/login/'
-    def get(self, request, client_id):
-        client = get_object_or_404(Client, pk=client_id)
-        event_list = Event.objects.filter(client=client).order_by("-date_time")
-        result_list = Result.objects.filter(client=client)
-        # detailed_service_list = ClientServiceLinker.objects.filter(client=client)
-        # print((timezone.now()))
-        default_data = client
-
-        client_form = ClientForm(initial=default_data.__dict__)
-        detailed_event_form = DetailedEventForm(initial={})
-        price_form = PriceForm(initial={})
-        result_form = ResultForm(initial={#'client': event.client,
-                                          #'detailed_service': event.detailed_service, 
-                                          'date': timezone.now()})
-        pay_form = PayForm(initial={#'client': event.client,
-                                    #'detailed_service': event.detailed_service, 
-                                    'date_time': timezone.now()})
-        context = {}
-        context["client"] = client
-        context["event_list"] = event_list
-        context["result_list"] = result_list
-        context["client_form"] = client_form
-        context["detailed_event_form"] = detailed_event_form
-        context["price_form"] = price_form
-        context["result_form"] = result_form
-        context["pay_form"] = pay_form
-        # context["detailed_service_list"] = detailed_service_list
-        return render(request, "detailed_client.html", context)
+class CreateTask(LoginRequiredView):
 
 
-class CreateTask(LoginRequiredMixin, View):
-    login_url = '/crm/login/'
-    redirect_field_name = '/crm/login/'
     def get(self, request):        
 
         task_form = TaskForm()#initial={'date_time': datetime, 'duration': duration})
@@ -734,9 +1011,9 @@ class CreateTask(LoginRequiredMixin, View):
         return HttpResponse(task_form.is_valid())
 
 
-class CreateEvent(LoginRequiredMixin, View):
-    login_url = '/crm/login/'
-    redirect_field_name = '/crm/login/'
+class CreateEvent(LoginRequiredView):
+
+
     def get(self, request):        
         # feadback = get_object_or_404(Feadback, pk=feadback_id)
         datetime = request.GET.get("datetime")
@@ -787,8 +1064,8 @@ class CreateEvent(LoginRequiredMixin, View):
 
 
 class TransferEvent(CrmMain):
-    login_url = '/crm/login/'
-    redirect_field_name = '/crm/login/'
+
+
     def get(self, request, event_id):
         context = {"event_id": event_id}
         week_periods = Week(event_list=EventList.eventsOnweek())
@@ -796,9 +1073,9 @@ class TransferEvent(CrmMain):
         return render(request, "transfer_event_calendar.html", context)
 
 
-class DeleteEvent(LoginRequiredMixin, View):
-    login_url = '/crm/login/'
-    redirect_field_name = '/crm/login/'
+class DeleteEvent(LoginRequiredView):
+
+
     def get(self, request, event_id):
         event = get_object_or_404(Event, pk=event_id)
         context = {"event": event}
@@ -825,9 +1102,9 @@ class DeleteEvent(LoginRequiredMixin, View):
         return redirect('/crm/')
 
 
-class DeleteResult(LoginRequiredMixin, View):
-    login_url = '/crm/login/'
-    redirect_field_name = '/crm/login/'
+class DeleteResult(LoginRequiredView):
+
+
     def get(self, request, event_id, result_id):
         result = get_object_or_404(Result, pk=result_id)
         context = {"result": result}
@@ -862,17 +1139,17 @@ def feadbackBar(request):
             feadback_list_done = Feadback.objects.filter(has_event=True).order_by('-id')
             feadback_list = list(feadback_list_inwork)+list(feadback_list_done)
             context["feadback_list"] = feadback_list
-            return render(request, "feadback_list_ajax.html", context)
+            return render(request, "crm_main/feadback_list_ajax.html", context)
 
         elif request.POST.get("filter_type") == "to_work":
             feadback_list = Feadback.objects.filter(has_event=False).order_by('id')
             context["feadback_list"] = feadback_list
-            return render(request, "feadback_list_ajax.html", context)
+            return render(request, "crm_main/feadback_list_ajax.html", context)
 
         elif request.POST.get("filter_type") == "processed":
             feadback_list = Feadback.objects.filter(has_event=True).order_by('-id')
             context["feadback_list"] = feadback_list
-            return render(request, "feadback_list_ajax.html", context)
+            return render(request, "crm_main/feadback_list_ajax.html", context)
 
 
 def changeWeekCalendar(request):
@@ -889,7 +1166,7 @@ def changeWeekCalendar(request):
             if request.POST.get("transfer_event"):
                 context["event_id"] = request.POST.get("event_id")
                 return render(request, "transfer_event_week_calendar.html", context)
-            return render(request, "week_calendar.html", context)
+            return render(request, "crm_calendar/week_calendar.html", context)
 
         elif request.POST.get("go_to_week") == "next":
             print(request.POST.get("start_date"))
@@ -903,7 +1180,7 @@ def changeWeekCalendar(request):
             if request.POST.get("transfer_event"):
                 context["event_id"] = request.POST.get("event_id")
                 return render(request, "transfer_event_week_calendar.html", context)
-            return render(request, "week_calendar.html", context)
+            return render(request, "crm_calendar/week_calendar.html", context)
 
 
 def timeView(request):

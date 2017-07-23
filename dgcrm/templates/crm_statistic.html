@@ -1,0 +1,55 @@
+{% extends "base_crm.html" %}
+
+{% block content %}
+{% load static %}
+
+<h4>client By Month</h4>
+{% for client in new_clients_by_month %}
+    {{ client }}
+{% endfor %}
+<hr>
+
+<h4>client By 3 Months</h4>
+{% for client in new_clients_by_three_month %}
+    {{ client }}
+{% endfor %}
+<hr>
+
+<h4>client By 12 Months</h4>
+{% for client in new_clients_by_twelve_month %}
+    {{ client }}
+{% endfor %}
+<hr>
+
+
+<h4>event By Month</h4>
+{% for event in new_events_by_month %}
+    {{ event }}
+{% endfor %}
+<hr>
+
+<h4>event By 3 Months</h4>
+{% for event in new_events_by_three_month %}
+    {{ event }}
+{% endfor %}
+<hr>
+
+<h4>event By 12 Months</h4>
+{% for event in new_events_by_twelve_month %}
+    {{ event }}
+{% endfor %}
+<hr>
+
+<h4>event frequency raiting</h4>
+{% for event_frequency in raiting_by_event_frequency_sorted %}
+    {{ event_frequency }}
+{% endfor %}
+<hr>
+
+<h4>event day load raiting</h4>
+{% for event_day_load in raiting_by_days_load_sorted %}
+    {{ event_day_load }}
+{% endfor %}
+<hr>
+
+{% endblock %}

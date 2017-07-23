@@ -25,17 +25,11 @@
 <!-- First Parallax Image with Logo Text -->
 <div class="w3-top">
     <div class="w3-bar w3-red w3-large w3-animate-top">
-        {% if main_page %}
-            <a href="#" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
-            <a href="#calendar" class="w3-bar-item w3-button">КАЛЕНДАРЬ</a>
-            <a href="#clients" class="w3-bar-item w3-button">КЛИЕНТЫ</a>
-        {% else %}
-            <a href="/crm/#" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
-            <a href="/crm/#calendar" class="w3-bar-item w3-button">КАЛЕНДАРЬ</a>
-            <a href="/crm/#clients" class="w3-bar-item w3-button">КЛИЕНТЫ</a>
-        {% endif %}
-
-        
+        <a href="/crm/" class="w3-bar-item w3-button">ГЛАВНАЯ</a>
+        <a href="/crm/calendar/" class="w3-bar-item w3-button">КАЛЕНДАРЬ</a>
+        <a href="/crm/clients" class="w3-bar-item w3-button">КЛИЕНТЫ</a>
+        <a href="/crm/statistic" class="w3-bar-item w3-button">СТАТИСТИКА</a>
+        <a href="/crm/finance" class="w3-bar-item w3-button">ФИНАНСЫ</a>
         <a href="/crm/logout/" class="w3-bar-item w3-button w3-right">ВЫЙТИ</a>
     </div>
 </div>
