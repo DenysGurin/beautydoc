@@ -1,0 +1,32 @@
+{% extends "base_crm.html" %}
+
+{% block content %}
+{% load static %}
+
+
+<div class="w3-padding-16 w3-container">
+    <div class="w3-content w3-row-padding" style="max-width:90%">
+        <div class="w3-col s6 w3-animate-left">
+            <div class="w3-card-4">
+                {% include 'crm_main/feadback.html' %}
+            </div>
+            <br>
+            <div class="w3-card-4">
+                {% include 'crm_main/task.html' %}
+            </div>
+        </div>
+
+        <div class="w3-col s6 w3-animate-opacity">
+            <div class="w3-card-4">
+                {% include 'crm_main/event.html' %}
+            </div>
+        </div>
+
+        <!--<div class="w3-col s4 w3-animate-right">-->
+
+        <!--</div>-->
+    </div>
+</div>
+
+{% endblock %}
+

@@ -817,6 +817,7 @@ class CrmStatistic(LoginRequiredView):
 
         return render(request, "crm_statistic.html", context)
 
+
 class CrmFinance(LoginRequiredView):
 
     pass

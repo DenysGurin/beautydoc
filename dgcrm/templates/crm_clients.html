@@ -1,0 +1,31 @@
+{% extends "base_crm.html" %}
+
+{% block content %}
+{% load static %}
+
+
+<div class="w3-padding-24 w3-container" id="clients">
+
+    <div class="w3-content w3-card-4 w3-animate-opacity" style="max-width:80%">
+        {% if client_list %}
+            <ul class="w3-ul">
+                <li class="w3-red w3-large">Список клиентов</li>
+                <li class="w3-input">
+                    <form class="w3-small" method="post">{% csrf_token %}
+                        {{serch_form.search}}
+                    </form>
+                </li>
+            </ul>
+            <ul class="w3-ul" style="height: 65vh; overflow: auto;">
+            {% for client in client_list %}
+                <li onclick='goTo("{% url 'dgcrm:detailed_client' client.id %}")' style="cursor:pointer">
+                    <a>{{ client.first }} {{ client.last }}</a>
+                    <a class="w3-right">тел. {{ client.tel }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

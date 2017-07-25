@@ -1,0 +1,23 @@
+<div class="w3-content">
+    {% if periods %}
+        <ul class="w3-ul">
+            <li class="w3-red w3-large">Задания</li> 
+            <div class="w3-bar">
+                <form method="post">{% csrf_token %}
+                    <a class="w3-bar-item w3-hover-red" id="all">На день</a>
+                    <a class="w3-bar-item w3-hover-red" id="all">На неделю</a>
+                    <a class="w3-bar-item w3-hover-red" id="all">На месяц</a>
+                    <a href="/crm/create_task/" class="w3-bar-item w3-button w3-hover-red">Добавить задание</a>
+                    <a class="w3-bar-item w3-input w3-small">{{serch_form.search}}</a>
+                    <a class="w3-bar-item w3-input w3-small">{{serch_form.search}}</a>
+
+                </form>
+            </div>
+        </ul>
+        <ul class="w3-ul" style="height: 30vh; overflow: auto;">
+
+        {% include 'crm_main/task_onday.html' %}
+        
+        </ul>
+    {% endif %}
+</div>
