@@ -16,11 +16,12 @@ class Client(models.Model):
     birthday = models.DateField(blank = True, null=True)
     position = models.CharField(max_length=100, default="", blank = True)
     live_in = models.CharField(max_length=100, default="", blank = True)
+    total_paid = models.IntegerField(blank=True, null=True)
     # services = models.ManyToManyField(DetailedService, through='ClientServiceLinker', related_name = 'client_service', blank=True)##del
     # events = models.ManyToManyField(Event, through='ClientEventLinker', related_name = 'client_event', blank=True)
     
     # last_visit = models.DateTimeField(blank=True, null=True)
-    # total_paid = models.IntegerField(default=0, blank = True, null=True)
+
 
     def __str__(self):
         return "%s %s %s"%(self.first, self.last, self.tel)

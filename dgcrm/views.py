@@ -24,9 +24,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 
 
-from .forms import MyAuthenticationForm, EventForm, ResultForm, PayForm, DetailedEventForm, SearchForm, FeadbackForm, SearchFeadbackForm, TaskForm, PriceForm, ClientForm
+from .forms import *
 from main.models import ServiceCategory, Service, DetailedService
-from .models import Event, Client, Feadback, Task, Result, CanceledEvent, Pay, Price
+from .models import *
 
 from django.db.models import F, Q
 
@@ -37,7 +37,75 @@ def dayPeriods(hour=9, minute=0, second=0):
 
     start_day = datetime.time(hour, minute, second)
 
-def serchByNameTel(search_feadback):
+
+class Search(object):
+
+    def __init__(self, search_str):
+        # super(Search, self).__init__(search_feadback)
+        self.to_find_fn_and_ln = re.match(u"(?P<first_name>[\u0400-\u0500]+) (?P<last_name>[\u0400-\u0500]+)",
+                                          search_str, re.U)
+        self.to_find_fn_or_ln = re.match(u"^(?P<some_name>[\u0400-\u0500]+)$|^([\u0400-\u0500]+[\s]+)$",
+                                         search_str, re.U)
+        self.to_find_tel = re.match(r"^(?:([+]\d{1,2}))?[\s.-]?(\d{3})?[\s.-]?(\d{3})?[\s.-]?(\d{2})?[\s.-]?(\d{2})$",
+                                    search_str, re.U)
+        self.to_find_email = re.match(r'(?:[a-z0-9!#$%&*+/=?^_`{|}~-]+'
+                                      r'(?:\.[a-z0-9!#$%&*+/=?^_`{|}~-]+)*|'
+                                      r'"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|'
+                                      r'\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+'
+                                      r'[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}'
+                                      r'(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:'
+                                      r'(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|'
+                                      r'\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])', search_str, re.U)
+
+
+    def serchFeadback(self):
+        if self.to_find_fn_and_ln:
+            # print(to_find_fn_and_ln.group('first_name'))
+            q_first = Q(first=self.to_find_fn_and_ln.group('first_name'))
+            q_last = Q(last=self.to_find_fn_and_ln.group('last_name'))
+            feadback_list = Feadback.objects.filter(q_first, q_last).order_by('id')
+        elif self.to_find_fn_or_ln:
+            some_name = re.findall(u'[\u0400-\u0500]+', self.to_find_fn_or_ln.group(0), re.U)[0]
+            # print(some_name)
+            q_some1 = Q(first__contains=some_name)
+            q_some2 = Q(last__contains=some_name)
+
+            feadback_list = Feadback.objects.filter(q_some1 | q_some2).order_by('id')
+        elif self.to_find_tel:
+            q_tel = Q(tel=self.to_find_tel.group())
+            feadback_list = Feadback.objects.filter(q_tel).order_by('id')
+        else:
+            feadback_list = [None]
+
+        return feadback_list
+
+
+    def serchClient(self):
+        if self.to_find_fn_and_ln:
+            # print(to_find_fn_and_ln.group('first_name'))
+            q_first = Q(first=self.to_find_fn_and_ln.group('first_name'))
+            q_last = Q(last=self.to_find_fn_and_ln.group('last_name'))
+            client_list = Client.objects.filter(q_first, q_last).order_by('id')
+        elif self.to_find_fn_or_ln:
+            some_name = re.findall(u'[\u0400-\u0500]+', self.to_find_fn_or_ln.group(0), re.U)[0]
+            # print(some_name)
+            q_some1 = Q(first__contains=some_name)
+            q_some2 = Q(last__contains=some_name)
+
+            client_list = Client.objects.filter(q_some1 | q_some2).order_by('id')
+        elif self.to_find_tel:
+            q_tel = Q(tel=self.to_find_tel.group())
+            client_list = Client.objects.filter(q_tel).order_by('id')
+        elif self.to_find_email:
+            q_email = Q(email=self.to_find_tel.group())
+            client_list = Client.objects.filter(q_email).order_by('id')
+        else:
+            client_list = [None]
+
+        return client_list
+
+
+def searchByNameTel(search_feadback):
 
 
     to_find_fn_and_ln = re.match(u"(?P<first_name>[\u0400-\u0500]+) (?P<last_name>[\u0400-\u0500]+)", search_feadback,
@@ -511,36 +579,37 @@ class CrmMain(LoginRequiredView):
 
     def get(self, request):
 
+        # CrmMain.addClientToEvent(self)
+        context = {"user": request.user}
+        serch_form = SearchForm()#initial={'search': '%sпоиск'%search_icon})
+        serch_feadback_form = SearchFeadbackForm()
+        feadback_list = Feadback.objects.all()
+        feadback_list_inwork = feadback_list.filter(has_event=False)
 
-        if request.user.is_authenticated:
-            # CrmMain.addClientToEvent(self)
-            context = {"user": request.user}
-            serch_form = SearchForm()#initial={'search': '%sпоиск'%search_icon})
-            serch_feadback_form = SearchFeadbackForm()
-            feadback_list = Feadback.objects.all()
-            feadback_list_inwork = feadback_list.filter(has_event=False).order_by('id')
-            feadback_list_done = feadback_list.filter(has_event=True).order_by('-id')
-            feadback_list = list(feadback_list_inwork)+list(feadback_list_done)
+        if feadback_list_inwork:
+            feadback_list_inwork.order_by('date')
+        feadback_list_done = feadback_list.filter(has_event=True)
 
-            # print(Task.objects.filter(done=False))
-            task_list_inwork = QueryByPeriod.queryOnday(Task.objects.filter(done=False))
-            # task_list_done = QueryByPeriod.queryOnday(Task.objects.filter(done=True))
-            if task_list_inwork != None:# or task_list_done != None:
-                task_list = list(task_list_inwork)#+list(task_list_done)
-                context["task_list"] = task_list
+        if feadback_list_done:
+            feadback_list_done.order_by('-date')
 
-            periods = Day(event_list=EventList.eventsOnday())
+        feadback_list = list(feadback_list_inwork)+list(feadback_list_done)
 
-            # return HttpResponse(EventList.eventsOnday(self))
-            context["serch_form"] = serch_form
-            context["serch_feadback_form"] = serch_feadback_form
-            context["feadback_list"] = feadback_list
+        # print(Task.objects.filter(done=False))
 
-            context["periods"] = periods
-            return render(request, "crm_main.html", context)
-        else:
-            # return HttpResponse("CRM not login")
-            return redirect('/crm/login/')
+        task_list = Task.objects.all().order_by("-date")
+        context["task_list"] = task_list
+
+        periods = Day(event_list=EventList.eventsOnday())
+
+        # return HttpResponse(EventList.eventsOnday(self))
+        context["serch_form"] = serch_form
+        context["serch_feadback_form"] = serch_feadback_form
+        context["feadback_list"] = feadback_list
+
+        context["periods"] = periods
+        return render(request, "crm_main.html", context)
+
 
     def post(self, request):
         context = {}
@@ -550,30 +619,27 @@ class CrmMain(LoginRequiredView):
         # print(serch_all)
        
         if request.is_ajax() and search_feadback:
-
-            context["feadback_list"] = serchByNameTel(search_feadback)
-            
-        return render(request, "feadback_list_ajax.html", context)
+            print(Search(search_feadback).serchFeadback())
+            context["feadback_list"] = Search(search_feadback).serchFeadback()
+            # context["feadback_list"] = searchByNameTel(search_feadback)
+        return render(request, "crm_main/feadback_list_ajax.html", context)
 
 
 class CrmCalendar(LoginRequiredView):
 
 
     def get(self, request):
-        if request.user.is_authenticated:
-            context = {"user": request.user}
 
-            periods = Day(event_list=EventList.eventsOnday())
-            week_periods = Week(event_list=EventList.eventsOnweek())
+        context = {"user": request.user}
 
-            # return HttpResponse(EventList.eventsOnday(self))
+        periods = Day(event_list=EventList.eventsOnday())
+        week_periods = Week(event_list=EventList.eventsOnweek())
 
-            context["periods"] = periods
-            context["week_periods"] = week_periods
-            return render(request, "crm_calendar.html", context)
-        else:
-            # return HttpResponse("CRM not login")
-            return redirect('/crm/login/')
+        # return HttpResponse(EventList.eventsOnday(self))
+
+        context["periods"] = periods
+        context["week_periods"] = week_periods
+        return render(request, "crm_calendar.html", context)
 
     def post(self, request):
         pass
@@ -583,20 +649,30 @@ class CrmClients(LoginRequiredView):
 
 
     def get(self, request):
-        if request.user.is_authenticated:
-            context = {"user": request.user}
 
-            client_list = Client.objects.all()
+        context = {}
+        serch_client_form = SearchClientForm()
 
-            context["client_list"] = client_list
+        client_list = Client.objects.all()
 
-            return render(request, "crm_clients.html", context)
-        else:
-            # return HttpResponse("CRM not login")
-            return redirect('/crm/login/')
+        context["serch_client_form"] = serch_client_form
+        context["client_list"] = client_list
+
+        return render(request, "crm_clients.html", context)
 
     def post(self, request):
-        pass
+        context = {}
+        search_client = u"%s" % str(request.POST.get("search_client"))
+        # print(search_client)
+        serch_all = re.findall(u'[\u0400-\u0500]+', search_client, re.U)
+        # print(serch_all)
+
+        if request.is_ajax() and search_client:
+            # print(Search(search_feadback).serchFeadback())
+            context["client_list"] = Search(search_client).serchClient()
+            # context["feadback_list"] = searchByNameTel(search_feadback)
+
+        return render(request, "crm_clients/clients_list_ajax.html", context)
 
 
 class QByPeriod(object):
@@ -772,7 +848,6 @@ class CrmStatistic(LoginRequiredView):
 
 
     def get(self, request):
-
 
         context = {}
         clients = QuerySetByPeriod(Client.objects.all(), "registration")
@@ -1012,6 +1087,22 @@ class CreateTask(LoginRequiredView):
         return HttpResponse(task_form.is_valid())
 
 
+class TaskActions(LoginRequiredView):
+
+    def post(self, request):
+        if request.method == "POST" and request.is_ajax():
+            context = {}
+            task_id = request.POST.get("task_id")
+            action_flag = request.POST.get("action_flag")
+            print(action_flag)
+            if action_flag == "done":
+                event = get_object_or_404(Task, pk=task_id)
+                event.done = True
+                event.save()
+                context["task_list"] = Task.objects.all()
+                return render(request, "crm_main/task_list_ajax.html", context)
+
+
 class CreateEvent(LoginRequiredView):
 
 
@@ -1136,21 +1227,108 @@ def feadbackBar(request):
     if request.method== "POST" and request.is_ajax():
         context = {}
         if request.POST.get("filter_type") == "all":
-            feadback_list_inwork = Feadback.objects.filter(has_event=False).order_by('id')
-            feadback_list_done = Feadback.objects.filter(has_event=True).order_by('-id')
+            feadback_list_inwork = Feadback.objects.filter(has_event=False).order_by('date')
+            feadback_list_done = Feadback.objects.filter(has_event=True).order_by('-date')
             feadback_list = list(feadback_list_inwork)+list(feadback_list_done)
             context["feadback_list"] = feadback_list
             return render(request, "crm_main/feadback_list_ajax.html", context)
 
         elif request.POST.get("filter_type") == "to_work":
-            feadback_list = Feadback.objects.filter(has_event=False).order_by('id')
+            feadback_list = Feadback.objects.filter(has_event=False).order_by('date')
             context["feadback_list"] = feadback_list
             return render(request, "crm_main/feadback_list_ajax.html", context)
 
         elif request.POST.get("filter_type") == "processed":
-            feadback_list = Feadback.objects.filter(has_event=True).order_by('-id')
+            feadback_list = Feadback.objects.filter(has_event=True).order_by('-date')
             context["feadback_list"] = feadback_list
             return render(request, "crm_main/feadback_list_ajax.html", context)
+
+
+def taskBar(request):
+    if request.method == "POST" and request.is_ajax():
+        context = {}
+        all_tasks = Task.objects.all()
+        print("all tasks")
+        print(all_tasks)
+
+        if request.POST.get("filter_type") == "all":
+            task_list_inwork = all_tasks.filter(done=False)
+            print(task_list_inwork)
+            if task_list_inwork:
+                task_list_inwork = task_list_inwork.order_by('date')
+            else:
+                task_list_inwork = []
+
+            task_list_done = all_tasks.filter(done=True)
+            print(task_list_done)
+            if task_list_done:
+                task_list_done = task_list_done.order_by('-date')
+            else:
+                task_list_done = []
+
+            task_list = list(task_list_inwork) + list(task_list_done)
+            print(task_list)
+            context["task_list"] = task_list
+            return render(request, "crm_main/task_list_ajax.html", context)
+
+        elif request.POST.get("filter_type") == "on_day":
+            task_list_inwork = QueryByPeriod.queryOnday(all_tasks.filter(done=False))
+            print(task_list_inwork)
+            if task_list_inwork:
+                task_list_inwork = task_list_inwork.order_by('date')
+            else:
+                task_list_inwork = []
+
+            task_list_done = QueryByPeriod.queryOnday(all_tasks.filter(done=True))
+            print(task_list_done)
+            if task_list_done:
+                task_list_done = task_list_done.order_by('-date')
+            else:
+                task_list_done = []
+
+            task_list = list(task_list_inwork) + list(task_list_done)
+            context["task_list"] = task_list
+            return render(request, "crm_main/task_list_ajax.html", context)
+
+        elif request.POST.get("filter_type") == "on_week":
+
+            task_list_inwork = QueryByPeriod.queryOnweek(all_tasks.filter(done=False))
+            print(task_list_inwork)
+            if task_list_inwork:
+                task_list_inwork = task_list_inwork.order_by('date')
+            else:
+                task_list_inwork = []
+
+            task_list_done = QueryByPeriod.queryOnweek(all_tasks.filter(done=True))
+            print(task_list_done)
+            if task_list_done:
+                task_list_done = task_list_done.order_by('-date')
+            else:
+                task_list_done = []
+
+            task_list = list(task_list_inwork) + list(task_list_done)
+            context["task_list"] = task_list
+            return render(request, "crm_main/task_list_ajax.html", context)
+
+        elif request.POST.get("filter_type") == "on_month":
+
+            task_list_inwork = QueryByPeriod.queryOnmonth(all_tasks.filter(done=False))
+            print(task_list_inwork)
+            if task_list_inwork:
+                task_list_inwork = task_list_inwork.order_by('date')
+            else:
+                task_list_inwork = []
+
+            task_list_done = QueryByPeriod.queryOnmonth(all_tasks.filter(done=True))
+            print(task_list_done)
+            if task_list_done:
+                task_list_done = task_list_done.order_by('-date')
+            else:
+                task_list_done = []
+
+            task_list = list(task_list_inwork) + list(task_list_done)
+            context["task_list"] = task_list
+            return render(request, "crm_main/task_list_ajax.html", context)
 
 
 def changeWeekCalendar(request):
@@ -1190,3 +1368,12 @@ def timeView(request):
     
     # return HttpResponse(max_d)
     return HttpResponse(datetime.combine(min_datetime, datetime.min.time()))
+
+def updateTotalPaid(request):
+    clients = Client.objects.all()
+    pays = Pay.objects.all()
+    for client in clients:
+        client_pays = pays.filter(client=client)
+        client.total_paid =sum((pay.pay for pay in client_pays))
+        client.save()
+    return redirect("/crm/")

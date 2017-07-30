@@ -1,0 +1,21 @@
+{% if client_list %}
+<table class="w3-table w3-bordered">
+    {% for client in client_list %}
+        <!--<li onclick='goTo("{% url 'dgcrm:detailed_client' client.id %}")' style="cursor:pointer">-->
+            <!--<a>{{ client.first }} {{ client.last }}</a>-->
+            <!--<a class="w3-right">тел. {{ client.tel }}</a>-->
+        <!--</li>-->
+        <tr onclick='goTo("{% url 'dgcrm:detailed_client' client.id %}")' style="cursor:pointer">
+            <td>{{ client.first }} {{ client.last }}</td>
+            <td>тел. {{ client.tel }}</td>
+            <td>{{ client.email }}</td>
+            <td>{{ client.total_paid }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+    <!--<li>-->
+        <!--<a>Не найдено совпадений</a>-->
+    <!--</li>-->
+{% endif %}

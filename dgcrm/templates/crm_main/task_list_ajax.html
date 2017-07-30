@@ -1,0 +1,35 @@
+{% if task_list %}
+    {% for task in task_list %}
+
+    {% if task.done %}
+     <li class="w3-leftbar w3-border-0 w3-border-green">
+         <a>{{ task.task }}</a>
+    </li>
+    {% else %}
+    <li class="w3-leftbar w3-border-0 w3-border-red w3-row" onmouseover="showElementById('task_{{ task.id }}_actions')" onmouseout="hideElementById('task_{{ task.id }}_actions')">
+        <div class="w3-col s7">
+            <div class="w3-padding-small">{{ task.task }}</div>
+        </div>
+
+        <div class="w3-col s5 w3-right" id="task_{{ task.id }}_actions" style="display: none;">
+            <!--<form action="/crm/task/actions/{{ task.id }}/" method="post">{% csrf_token %}</form>-->
+            <button action_flag="done" task_id="{{ task.id }}" class="task_action w3-hover-red w3-button w3-padding-small">сделано</button>
+            <button action_flag="done" task_id="{{ task.id }}" class="task_action w3-hover-red w3-button w3-padding-small">повторить</button>
+            <button action_flag="done" task_id="{{ task.id }}" class="task_action w3-hover-red w3-button w3-padding-small">удалтить</button>
+
+        </div>
+        <!--<div>{{ task.date }}<span class="w3-border w3-content w3-right" id="task_{{ task.id }}_actions" style="display: none;">-->
+                <!--<button class="w3-hover-red w3-button w3-padding-small">сделано</button>-->
+                <!--<button class="w3-hover-red w3-button w3-padding-small">повторить</button>-->
+                <!--<button class="w3-hover-red w3-button w3-padding-small">удалтить</button>-->
+            <!--</span></div>-->
+        <!--<p class="w3-content" style="display: block">{{ task.task }}</p>-->
+    </li>
+    {% endif %}
+
+{% endfor %}
+{% else %}
+    <li>
+        <a>Не найдено совпадений</a>
+    </li>
+{% endif %}

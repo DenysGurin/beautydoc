@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^crm/logout/$', logout, {'next_page': '/crm/login/'}, name='logout'),
     url(r'^crm/feadback/(?P<feadback_id>[0-9]+)/$', views.DetailedFeadback.as_view(), name='detailed_feadback'),
     url(r'^crm/feadback/feadback_bar/$', views.feadbackBar, name='feadback_bar'),
+    url(r'^crm/task/task_bar/$', views.taskBar, name='task_bar'),
+    url(r'^crm/task/actions/$', views.TaskActions.as_view(), name='task_actions'),
     url(r'^crm/create_task/$', views.CreateTask.as_view(), name='create_task'),
     url(r'^crm/search_feadback/$', views.searchFeadback, name='search_feadback'),
     url(r'^crm/client/(?P<client_id>[0-9]+)/$', views.ClientCard.as_view(), name='detailed_client'),
@@ -24,4 +26,6 @@ urlpatterns = [
     url(r'^crm/delete_result/(?P<event_id>[0-9]+)/(?P<result_id>[0-9]+)/$', views.DeleteResult.as_view(), name='delete_result'),
     url(r'^crm/change_week_calendar/$', views.changeWeekCalendar, name='change_week_calendar'),
     url(r'^crm/time/$', views.timeView, name='time'),
+    url(r'^crm/update_pays/$', views.updateTotalPaid, name='update_pays'),
+
 ]  

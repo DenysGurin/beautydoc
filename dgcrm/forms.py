@@ -198,20 +198,27 @@ class ClientForm(forms.ModelForm):
         exclude = ["registration"]
 
 class SearchForm(forms.Form):
-    
-    search = forms.CharField(widget=forms.TextInput(attrs={'class': 'w3-input',
-                                                           'placeholder': "поиск",
-                                                           'style': "border:none; ",
-                                                           'autofocus': "none"}))
 
-class SearchFeadbackForm(forms.Form):
-    
     search = forms.CharField(widget=forms.TextInput(attrs={'class': 'w3-input w3-small w3-padding-small',
-                                                           'id': "search_feadback",
+                                                           'id': "search",
                                                            'placeholder': "поиск",
                                                            'style': "border:none; outline: none",
                                                            'autofocus': "none"}))
 
+class SearchFeadbackForm(SearchForm):
+
+    def __init__(self, *args, **kwargs):
+        super(SearchForm, self).__init__(*args, **kwargs)
+
+        search = self.fields.get("search")
+        search.widget.attrs['id'] = "search_feadback"
+
+class SearchClientForm(SearchForm):
+    def __init__(self, *args, **kwargs):
+        super(SearchForm, self).__init__(*args, **kwargs)
+
+        search = self.fields.get("search")
+        search.widget.attrs['id'] = "search_client"
 
 
 # class ReviewForm(forms.ModelForm):

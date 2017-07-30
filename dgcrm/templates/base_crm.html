@@ -63,4 +63,162 @@ function showElementById(id) {
 function hideElementById(id) {
     document.getElementById(id).style.display = "none";
 }
+
+
+$(document).ready(function () {
+    $("#search_form").on("click", "#search_feadback_icon", function() {
+        var url = "/crm/";
+        var search_feadback = $('#search_feadback').val();
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'search_feadback': search_feadback,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#feadback_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+    $("#search_form").on("click", "#search_client_icon", function() {
+        var url = "/crm/clients/";
+        var search_client = $('#search_client').val();
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'search_client': search_client,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#clients_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+    $("#feadback_bar").on("click", "#all", function() {
+        var url = "/crm/feadback/feadback_bar/";
+        var filter_type = "all";
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'filter_type': filter_type,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#feadback_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+    $("#feadback_bar").on("click", "#to_work", function() {
+        var url = "/crm/feadback/feadback_bar/";
+        var filter_type = "to_work";
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'filter_type': filter_type,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#feadback_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+    $("#feadback_bar").on("click", "#processed", function() {
+        var url = "/crm/feadback/feadback_bar/";
+        var filter_type = "processed";
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'filter_type': filter_type,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#feadback_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+    $("#task_bar").on("click", "#all", function() {
+        var url = "/crm/task/task_bar/";
+        var filter_type = "all";
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'filter_type': filter_type,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#task_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+    $("#task_bar").on("click", "#on_day", function() {
+        var url = "/crm/task/task_bar/";
+        var filter_type = "on_day";
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'filter_type': filter_type,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#task_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+    $("#task_bar").on("click", "#on_week", function() {
+        var url = "/crm/task/task_bar/";
+        var filter_type = "on_week";
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'filter_type': filter_type,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#task_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+    $("#task_bar").on("click", "#on_month", function() {
+        var url = "/crm/task/task_bar/";
+        var filter_type = "on_month";
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'filter_type': filter_type,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#task_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+});
+
 </script>

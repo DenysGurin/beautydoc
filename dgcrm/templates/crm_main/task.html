@@ -2,22 +2,47 @@
     {% if periods %}
         <ul class="w3-ul">
             <li class="w3-red w3-large">Задания</li> 
-            <div class="w3-bar">
+            <div class="w3-bar" id="task_bar">
+                <div class="w3-bar-item w3-hover-red w3-button" id="all">Все</div>
+                <div class="w3-bar-item w3-hover-red w3-button" id="on_day">На день</div>
+                <div class="w3-bar-item w3-hover-red w3-button" id="on_week">На неделю</div>
+                <div class="w3-bar-item w3-hover-red w3-button" id="on_month">На месяц</div>
+                <a href="/crm/create_task/" class="w3-bar-item w3-button w3-hover-red">Добавить задание</a>
                 <form method="post">{% csrf_token %}
-                    <a class="w3-bar-item w3-hover-red" id="all">На день</a>
-                    <a class="w3-bar-item w3-hover-red" id="all">На неделю</a>
-                    <a class="w3-bar-item w3-hover-red" id="all">На месяц</a>
-                    <a href="/crm/create_task/" class="w3-bar-item w3-button w3-hover-red">Добавить задание</a>
+
                     <a class="w3-bar-item w3-input w3-small">{{serch_form.search}}</a>
                     <a class="w3-bar-item w3-input w3-small">{{serch_form.search}}</a>
 
                 </form>
             </div>
         </ul>
-        <ul class="w3-ul" style="height: 30vh; overflow: auto;">
+        <ul class="w3-ul" id="task_list" style="height: 30vh; overflow: auto;">
 
-        {% include 'crm_main/task_onday.html' %}
+        {% include 'crm_main/task_list_ajax.html' %}
         
         </ul>
     {% endif %}
 </div>
+<script>
+$(document).ready(function () {
+    $("#task_list").on("click", ".task_action", function() {
+        var url = "/crm/task/actions/";
+        var action_flag = $(this).attr("action_flag");
+        var task_id = parseInt($(this).attr("task_id"));
+        console.log(action_flag);
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: url,
+            data: {'task_id': task_id,
+                   'action_flag': action_flag,
+                   'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+            success: function(data) {
+                $('#task_list').html(data);
+            },
+            datatype: 'json',
+        });
+    });
+});
+</script>

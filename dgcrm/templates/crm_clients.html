@@ -11,18 +11,14 @@
             <ul class="w3-ul">
                 <li class="w3-red w3-large">Список клиентов</li>
                 <li class="w3-input">
-                    <form class="w3-small" method="post">{% csrf_token %}
-                        {{serch_form.search}}
+                    <form class="w3-cell-row  w3-border w3-round-large" id="search_form" method="post">{% csrf_token %}
+                        <a class="w3-cell" style="padding-left:10px">{{serch_client_form.search}}</a>
+                        <a class="w3-cell w3-conteiner w3-center" style="cursor:pointer"><i id="search_client_icon" class="fa fa-search w3-text-red " aria-hidden="true"></i></a>
                     </form>
                 </li>
             </ul>
-            <ul class="w3-ul" style="height: 65vh; overflow: auto;">
-            {% for client in client_list %}
-                <li onclick='goTo("{% url 'dgcrm:detailed_client' client.id %}")' style="cursor:pointer">
-                    <a>{{ client.first }} {{ client.last }}</a>
-                    <a class="w3-right">тел. {{ client.tel }}</a>
-                </li>
-            {% endfor %}
+            <ul class="w3-ul" id="clients_list" style="height: 65vh; overflow: auto;">
+                {% include 'crm_clients/clients_list_ajax.html' %}
             </ul>
         {% endif %}
     </div>
