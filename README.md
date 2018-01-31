@@ -1,2 +1,2 @@
-# solnce
+# beauty
 website with crm
